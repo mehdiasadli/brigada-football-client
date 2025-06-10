@@ -28,7 +28,7 @@ export default function GoalsInput({ form, numberInputProps, field, compact = fa
           <ThemeIcon size={32} radius='xl' color='blue' variant='light' mx='auto' mb='xs'>
             <IconBallFootball size={16} />
           </ThemeIcon>
-          <Text size='xs' fw={700} c='blue.7' tt='uppercase' ls={1}>
+          <Text size='xs' fw={700} c='blue.7' tt='uppercase'>
             Goals Scored
           </Text>
         </Box>

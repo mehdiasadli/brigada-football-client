@@ -28,7 +28,7 @@ export default function AssistsInput({ form, numberInputProps, field, compact = 
           <ThemeIcon size={32} radius='xl' color='violet' variant='light' mx='auto' mb='xs'>
             <IconHandGrab size={16} />
           </ThemeIcon>
-          <Text size='xs' fw={700} c='violet.7' tt='uppercase' ls={1}>
+          <Text size='xs' fw={700} c='violet.7' tt='uppercase'>
             Assists Made
           </Text>
         </Box>

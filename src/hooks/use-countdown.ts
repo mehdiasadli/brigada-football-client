@@ -1,6 +1,4 @@
-import { useState } from 'react';
-
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 function defaultFormatter(time: number) {
   const minutes = Math.floor(time / 60000);
@@ -77,7 +75,7 @@ export function useCountdown(options: UseCountdownProps = {}): UseCountdownRetur
   }, []);
 
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let interval: number;
 
     if (isRunning && !isFinished) {
       const startTime = Date.now();
@@ -89,7 +87,7 @@ export function useCountdown(options: UseCountdownProps = {}): UseCountdownRetur
         })
       );
 
-      interval = setInterval(() => {
+      interval = window.setInterval(() => {
         setTime((currentTime) => {
           const newTime = Math.max(currentTime - intervalMs, finishTimeMs);
           onInterval?.(newTime);

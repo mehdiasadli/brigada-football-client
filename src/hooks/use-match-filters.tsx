@@ -8,7 +8,7 @@ import {
   type SelectProps,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { IconArrowDown, IconArrowsUpDown, IconArrowUp } from '@tabler/icons-react';
+import { IconArrowDown, IconArrowUp } from '@tabler/icons-react';
 
 interface UseMatchFilterOptions {
   defaultOrderDirection?: 'asc' | 'desc';
