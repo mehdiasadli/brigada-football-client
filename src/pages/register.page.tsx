@@ -29,7 +29,9 @@ import {
   IconPhone,
   IconMapPin,
   IconGenderBigender,
+  IconCalendar,
 } from '@tabler/icons-react';
+import { DateInput } from '@mantine/dates';
 
 export default function RegisterPage() {
   const form = useForm<RegisterSchema>({
@@ -227,6 +229,21 @@ export default function RegisterPage() {
               {...form.getInputProps('placeOfBirth')}
             />
           </SimpleGrid>
+
+          {/* Date of Birth */}
+          <DateInput
+            label='Date of Birth'
+            placeholder='Select your date of birth'
+            leftSection={
+              <ThemeIcon size={20} radius='xl' color='teal' variant='light'>
+                <IconCalendar size={12} />
+              </ThemeIcon>
+            }
+            minDate={new Date(new Date().setFullYear(new Date().getFullYear() - 100))}
+            maxDate={new Date(new Date().setFullYear(new Date().getFullYear() - 18))}
+            styles={inputStyles}
+            {...form.getInputProps('dateOfBirth')}
+          />
 
           {/* Gender */}
           <Select
