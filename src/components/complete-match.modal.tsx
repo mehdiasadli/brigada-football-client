@@ -74,7 +74,7 @@ export default function CompleteMatchModal({ match }: CompleteMatchModalProps) {
 
           <Group grow align='flex-start'>
             <DurationInput form={form} />
-            <WeatherConditionInput form={form} />
+            <WeatherConditionInput form={form} selectProps={{ description: 'Select match day weather' }} />
           </Group>
         </Paper>
 
