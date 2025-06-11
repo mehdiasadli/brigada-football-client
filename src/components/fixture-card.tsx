@@ -182,9 +182,9 @@ export default function FixtureCard({ match }: FixtureCardProps) {
               {match.creator ? (
                 <Group gap='xs'>
                   <Avatar src={match.creator.avatar} size='sm' radius='xl' />
-                  <Text size='sm' fw={600} c='gray.7'>
+                  <Anchor component={Link} to={`/users/${match.creator.username}`} size='sm' fw={600} c='gray.7'>
                     {match.creator.username}
-                  </Text>
+                  </Anchor>
                 </Group>
               ) : (
                 <Group gap='xs'>
@@ -211,7 +211,7 @@ export default function FixtureCard({ match }: FixtureCardProps) {
                         label={
                           <Stack gap={2}>
                             <Text size='xs' fw={600}>
-                              {player.user?.username || player.name}
+                              {player.user ? `${player.user.firstName} ${player.user.lastName}` : player.name}
                             </Text>
                             {player.isCaptain && (
                               <Group gap={2}>
