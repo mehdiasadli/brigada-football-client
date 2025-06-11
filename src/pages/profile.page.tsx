@@ -235,7 +235,7 @@ export default function ProfilePage() {
                     <IconTarget size={24} />
                   </ThemeIcon>
                   <Text size='xl' fw={900} c='blue.8'>
-                    {stats.totalGoals}
+                    {stats.totalGoals ?? 0}
                   </Text>
                   <Text size='sm' fw={600} c='gray.7' tt='uppercase'>
                     Goals
@@ -259,7 +259,7 @@ export default function ProfilePage() {
                     <IconHandGrab size={24} />
                   </ThemeIcon>
                   <Text size='xl' fw={900} c='violet.8'>
-                    {stats.totalAssists}
+                    {stats.totalAssists ?? 0}
                   </Text>
                   <Text size='sm' fw={600} c='gray.7' tt='uppercase'>
                     Assists
@@ -435,20 +435,6 @@ export default function ProfilePage() {
             <Paper p='lg' radius='xl' withBorder>
               <Stack gap='md'>
                 <Group gap='xs'>
-                  <IconMapPin size={16} color='var(--mantine-color-gray-6)' />
-                  <Text size='sm' fw={600} c='gray.7'>
-                    Place of Birth
-                  </Text>
-                </Group>
-                <Text size='lg' fw={600} c='gray.8'>
-                  {user.placeOfBirth}
-                </Text>
-              </Stack>
-            </Paper>
-
-            <Paper p='lg' radius='xl' withBorder>
-              <Stack gap='md'>
-                <Group gap='xs'>
                   <IconCalendar size={16} color='var(--mantine-color-gray-6)' />
                   <Text size='sm' fw={600} c='gray.7'>
                     Age
@@ -456,20 +442,6 @@ export default function ProfilePage() {
                 </Group>
                 <Text size='lg' fw={600} c='gray.8'>
                   {dayjs().diff(dayjs(user.dateOfBirth), 'year')} years old
-                </Text>
-              </Stack>
-            </Paper>
-
-            <Paper p='lg' radius='xl' withBorder>
-              <Stack gap='md'>
-                <Group gap='xs'>
-                  <IconUsers size={16} color='var(--mantine-color-gray-6)' />
-                  <Text size='sm' fw={600} c='gray.7'>
-                    Member Since
-                  </Text>
-                </Group>
-                <Text size='lg' fw={600} c='gray.8'>
-                  {dayjs(user.createdAt).format('MMMM D, YYYY')}
                 </Text>
               </Stack>
             </Paper>
