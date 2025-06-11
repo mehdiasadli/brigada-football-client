@@ -3,7 +3,7 @@ import { useMutate } from '../../hooks/use-mutate';
 import { matchesKeys } from './matches.queries';
 import { matchesService } from './matches.service';
 import type { PaginatedResult } from '../../schemas/query.schema';
-import type { FindAllMatchesResponse } from './matches.responses';
+import type { FindAllMatchesResponse, FindOneMatchResponse } from './matches.responses';
 import type { SuccessResponse } from '../define-api';
 import { useUserStore } from '../../stores/user.store';
 import { randId } from '../../utils/rand-id';
@@ -152,7 +152,7 @@ export function useUpdateMatch() {
   });
 }
 
-export function useCompleteMatch(match: FindAllMatchesResponse) {
+export function useCompleteMatch(match: FindOneMatchResponse) {
   const queryClient = useQueryClient();
 
   return useMutate(matchesService.completeMatch, {

@@ -6,7 +6,6 @@ import type { FindAllMatchesResponse } from '../api/matches/matches.responses';
 import { useDeleteMatch } from '../api/matches/matches.mutations';
 import { useUserStore } from '../stores/user.store';
 import { MatchStatus } from '../schemas/entities/match.entity';
-import CompleteMatchModal from './complete-match.modal';
 
 interface MatchCardActionsProps {
   match: FindAllMatchesResponse;
@@ -37,22 +36,13 @@ export default function MatchCardActions({ match }: MatchCardActionsProps) {
     });
   };
 
-  const openCompleteModal = () => {
-    modals.open({
-      title: 'Complete Match',
-      size: 'xl',
-      zIndex: 10000,
-      children: <CompleteMatchModal match={match} />,
-      radius: 'lg',
-    });
-  };
-
   return isCreator ? (
     <Group gap='xs'>
       {match.status === MatchStatus.enum.PENDING && (
         <Tooltip label='Complete Match'>
           <ActionIcon
-            onClick={openCompleteModal}
+            component={Link}
+            to={`/matches/complete/${match.id}`}
             variant='light'
             color='green'
             size='lg'

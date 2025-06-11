@@ -18,6 +18,7 @@ import CreateResultPage from './pages/create-result.page';
 import MatchPage from './pages/match.page';
 import ForgotPasswordPage from './pages/forgot-password.page';
 import ResendVerificationPage from './pages/resend-verification.page';
+import CompleteMatchPage from './pages/complete-match.page';
 
 export default function Routes() {
   const { token } = useTokenStore();
@@ -33,6 +34,7 @@ export default function Routes() {
         <Route path='matches/create/fixture' element={<CreateFixturePage />} />
         <Route path='matches/create/result' element={<CreateResultPage />} />
         <Route path='matches/edit/:matchId' element={<EditMatchPage />} />
+        <Route path='matches/complete/:matchId' element={<CompleteMatchPage />} />
         <Route path='teams/edit/:teamId' element={<EditTeamPage />} />
         <Route path='users/:username?' element={<ProfilePage />} />
       </Route>

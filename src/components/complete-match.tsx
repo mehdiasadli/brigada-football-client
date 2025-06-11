@@ -1,21 +1,21 @@
 import { useForm } from '@mantine/form';
-import { Button, Group, Paper, Stack, Title, ThemeIcon, Text, Box, rem } from '@mantine/core';
-import { IconTrophy, IconBallFootball } from '@tabler/icons-react';
-import type { FindAllMatchesResponse } from '../api/matches/matches.responses';
-import { useCompleteMatch } from '../api/matches/matches.mutations';
+import type { FindOneMatchResponse } from '../api/matches/matches.responses';
 import { completeMatchSchema, type CompleteMatchSchema } from '../schemas/matches.schema';
-import RatingInput from './match-inputs/rating-input';
+import { useCompleteMatch } from '../api/matches/matches.mutations';
+import { zodResolver } from 'mantine-form-zod-resolver';
+import { Box, Button, Group, Paper, rem, Stack, Text, ThemeIcon, Title } from '@mantine/core';
+import { IconBallFootball, IconTrophy } from '@tabler/icons-react';
+import DurationInput from './match-inputs/duration.input';
+import WeatherConditionInput from './match-inputs/weather-condition';
 import GoalsInput from './match-inputs/goals.input';
 import AssistsInput from './match-inputs/assists.input';
-import WeatherConditionInput from './match-inputs/weather-condition';
-import DurationInput from './match-inputs/duration.input';
-import { zodResolver } from 'mantine-form-zod-resolver';
+import RatingInput from './match-inputs/rating-input';
 
-interface CompleteMatchModalProps {
-  match: FindAllMatchesResponse;
+interface CompleteMatchProps {
+  match: FindOneMatchResponse;
 }
 
-export default function CompleteMatchModal({ match }: CompleteMatchModalProps) {
+export default function CompleteMatch({ match }: CompleteMatchProps) {
   const form = useForm<CompleteMatchSchema>({
     initialValues: {
       duration: match.duration ?? 90,
@@ -35,7 +35,6 @@ export default function CompleteMatchModal({ match }: CompleteMatchModalProps) {
     },
     validate: zodResolver(completeMatchSchema),
   });
-
   const mutation = useCompleteMatch(match);
 
   const onSubmit = form.onSubmit(
@@ -147,21 +146,9 @@ export default function CompleteMatchModal({ match }: CompleteMatchModalProps) {
 
                     {/* Player Stats */}
                     <Group grow align='flex-start'>
-                      <GoalsInput
-                        form={form}
-                        field={`teams.${teamIndex}.players.${playerIndex}.goals`}
-                        compact={true}
-                      />
-                      <AssistsInput
-                        form={form}
-                        field={`teams.${teamIndex}.players.${playerIndex}.assists`}
-                        compact={true}
-                      />
-                      <RatingInput
-                        form={form}
-                        field={`teams.${teamIndex}.players.${playerIndex}.rating`}
-                        compact={true}
-                      />
+                      <GoalsInput form={form} field={`teams.${teamIndex}.players.${playerIndex}.goals`} />
+                      <AssistsInput form={form} field={`teams.${teamIndex}.players.${playerIndex}.assists`} />
+                      <RatingInput form={form} field={`teams.${teamIndex}.players.${playerIndex}.rating`} />
                     </Group>
                   </Stack>
                 </Paper>
