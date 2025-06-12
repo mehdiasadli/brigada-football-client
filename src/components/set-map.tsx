@@ -61,13 +61,13 @@ export default function SetMap({
 
   // Initialize marker position from form values if they exist
   useEffect(() => {
-    const lat = form.values.latitude;
-    const lng = form.values.longitude;
+    const lat = form.getValues().latitude;
+    const lng = form.getValues().longitude;
 
     if (lat && lng && typeof lat === 'number' && typeof lng === 'number') {
       setMarkerPosition({ lat, lng });
     }
-  }, [form.values.latitude, form.values.longitude]);
+  }, [form]);
 
   const handleMarkerSet = (position: MarkerPosition) => {
     setMarkerPosition(position);
