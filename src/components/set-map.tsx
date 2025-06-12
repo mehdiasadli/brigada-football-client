@@ -30,7 +30,7 @@ function MapEventHandler({
   form,
   onMarkerSet,
 }: {
-  form: UseFormReturnType<any>; // eslint-disable-line @typescript-eslint/no-explicit-any
+  form: UseFormReturnType<any>;
   onMarkerSet: (position: MarkerPosition) => void;
 }) {
   const map = useMapEvents({
