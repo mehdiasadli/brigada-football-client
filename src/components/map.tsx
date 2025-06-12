@@ -37,19 +37,33 @@ interface MapProps extends MapContainerProps {
 
 export function Map({ venue, markerProps, popupProps, renderPopup, ...props }: MapProps) {
   const venues = Array.isArray(venue) ? venue : [venue];
-  const center =
-    venues.length > 1
-      ? ([
-          venues.reduce((acc, v) => acc + v.latitude, 0) / venues.length,
-          venues.reduce((acc, v) => acc + v.longitude, 0) / venues.length,
-        ] as [number, number])
-      : ([venues[0].latitude, venues[0].longitude] as [number, number]);
+  const validVenues = venues.filter(
+    (v) =>
+      v &&
+      typeof v.latitude === 'number' &&
+      typeof v.longitude === 'number' &&
+      !isNaN(v.latitude) &&
+      !isNaN(v.longitude)
+  );
+  const defaultCenter = (props.center as [number, number]) || [40.3774, 49.8542];
+
+  const center: [number, number] =
+    validVenues.length > 0
+      ? validVenues.length > 1
+        ? [
+            validVenues.reduce((acc, v) => acc + v.latitude, 0) / validVenues.length,
+            validVenues.reduce((acc, v) => acc + v.longitude, 0) / validVenues.length,
+          ]
+        : [validVenues[0].latitude, validVenues[0].longitude]
+      : defaultCenter;
+
+  const zoom = validVenues.length > 0 ? props.zoom || 13 : 10;
 
   return (
-    <MapContainer center={center} zoom={13} {...props}>
+    <MapContainer center={center} zoom={zoom} {...props}>
       <TileLayer url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' />
-      {venues.map((v) => (
-        <Marker key={v.name} position={[v.latitude, v.longitude]} {...markerProps}>
+      {validVenues.map((v) => (
+        <Marker key={v.id || v.name} position={[v.latitude, v.longitude]} {...markerProps}>
           <Popup autoClose closeButton={false} closeOnClick closeOnEscapeKey keepInView {...popupProps}>
             {renderPopup ? renderPopup(v) : v.name}
           </Popup>
