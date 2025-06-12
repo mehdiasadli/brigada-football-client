@@ -86,12 +86,6 @@ export function VenueCard({ venue }: VenueCardProps) {
               <Badge color={getTypeColor(venue.type)} variant='light' size='xs'>
                 {getTypeLabel(venue.type)}
               </Badge>
-              {/* <Group gap='xs'>
-                <IconStar size={12} fill='var(--mantine-color-yellow-5)' color='var(--mantine-color-yellow-5)' />
-                <Text size='xs' fw={600}>
-                  4.5
-                </Text>
-              </Group> */}
             </Group>
           </Box>
 
@@ -103,8 +97,6 @@ export function VenueCard({ venue }: VenueCardProps) {
             </Menu.Target>
 
             <Menu.Dropdown>
-              {/* <Menu.Item leftSection={<IconEye size={14} />}>View Details</Menu.Item> */}
-              {/* <Menu.Item leftSection={<IconEdit size={14} />}>Edit Venue</Menu.Item> */}
               <Menu.Item leftSection={<IconTrash size={14} />} color='red' onClick={openDeleteModal}>
                 Delete Venue
               </Menu.Item>
@@ -124,7 +116,7 @@ export function VenueCard({ venue }: VenueCardProps) {
               </Text>
             </Group>
             <Text size='sm' fw={600}>
-              {venue.pricePerHour.toLocaleString()}
+              {venue.pricePerHour.toLocaleString()} AZN
             </Text>
           </Group>
         </Box>
@@ -138,13 +130,13 @@ export function VenueCard({ venue }: VenueCardProps) {
             <Group gap='xs'>
               <IconPhone size={12} color='var(--mantine-color-gray-6)' />
               <Text size='xs' c='dimmed'>
-                {venue.contactPhone ?? 'N/A'}
+                {venue.contactPhone || 'N/A'}
               </Text>
             </Group>
             <Group gap='xs'>
               <IconUser size={12} color='var(--mantine-color-gray-6)' />
               <Text size='xs' c='dimmed'>
-                {venue.contactName ?? 'N/A'}
+                {venue.contactName || 'N/A'}
               </Text>
             </Group>
           </Stack>
