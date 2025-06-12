@@ -16,7 +16,7 @@ L.Icon.Default.mergeOptions({
 });
 
 interface SetMapProps extends Omit<MapContainerProps, 'center' | 'zoom'> {
-  form: UseFormReturnType<any>; // eslint-disable-line @typescript-eslint/no-explicit-any
+  form: UseFormReturnType<any>;
   center?: [number, number];
   zoom?: number;
 }
