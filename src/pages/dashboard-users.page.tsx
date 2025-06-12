@@ -72,26 +72,6 @@ export default function DashboardUsersPage() {
         render={(user) => <UserCard user={user} />}
         cols={{ base: 1, xs: 1, sm: 2, md: 2, lg: 3, xl: 3 }}
       />
-
-      {/* Empty State */}
-      {/* {filteredVenues.length === 0 && (
-      <Paper p='xl' radius='md' ta='center' style={{ border: '2px dashed var(--mantine-color-gray-3)' }}>
-        <ThemeIcon size='xl' color='gray' variant='light' mx='auto' mb='md'>
-          <IconMapPin size={32} />
-        </ThemeIcon>
-        <Text size='lg' fw={600} mb='xs'>
-          No venues found
-        </Text>
-        <Text size='sm' c='dimmed' mb='lg'>
-          {searchTerm || filterType || filterStatus
-            ? 'Try adjusting your filters to see more venues.'
-            : 'Get started by adding your first venue.'}
-        </Text>
-        <Button leftSection={<IconPlus size={16} />} color='green'>
-          Add New Venue
-        </Button>
-      </Paper>
-    )} */}
     </Stack>
   );
 }

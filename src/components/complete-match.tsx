@@ -71,10 +71,10 @@ export default function CompleteMatch({ match }: CompleteMatchProps) {
             </Title>
           </Group>
 
-          <Group grow align='flex-start'>
+          <Stack>
             <DurationInput form={form} />
             <WeatherConditionInput form={form} selectProps={{ description: 'Select match day weather' }} />
-          </Group>
+          </Stack>
         </Paper>
 
         {/* Teams Section */}
@@ -145,11 +145,11 @@ export default function CompleteMatch({ match }: CompleteMatchProps) {
                     </Group>
 
                     {/* Player Stats */}
-                    <Group grow align='flex-start'>
+                    <Stack>
                       <GoalsInput form={form} field={`teams.${teamIndex}.players.${playerIndex}.goals`} />
                       <AssistsInput form={form} field={`teams.${teamIndex}.players.${playerIndex}.assists`} />
                       <RatingInput form={form} field={`teams.${teamIndex}.players.${playerIndex}.rating`} />
-                    </Group>
+                    </Stack>
                   </Stack>
                 </Paper>
               ))}

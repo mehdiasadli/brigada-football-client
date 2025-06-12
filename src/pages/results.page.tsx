@@ -1,4 +1,4 @@
-import { Stack, Container, Box } from '@mantine/core';
+import { Stack, Box } from '@mantine/core';
 import { useMatches } from '../api/matches/matches.queries';
 import InfiniteList from '../components/infinite-list';
 import { MatchStatus } from '../schemas/entities/match.entity';
@@ -23,20 +23,17 @@ export default function ResultsPage() {
     <Box
       style={{
         minHeight: '100vh',
-        background: 'linear-gradient(180deg, var(--mantine-color-green-0) 0%, var(--mantine-color-gray-0) 100%)',
       }}
     >
-      <Container size='xl' py='xl'>
-        <Stack gap='xl'>
-          <ResultsHeader />
+      <Stack gap='xl'>
+        <ResultsHeader />
 
-          <InfiniteList
-            result={result}
-            cols={{ base: 1, sm: 1, md: 2, lg: 2, xl: 2 }}
-            render={(match) => <ResultCard match={match} />}
-          />
-        </Stack>
-      </Container>
+        <InfiniteList
+          result={result}
+          cols={{ base: 1, sm: 1, md: 2, lg: 2, xl: 2 }}
+          render={(match) => <ResultCard match={match} />}
+        />
+      </Stack>
     </Box>
   );
 }

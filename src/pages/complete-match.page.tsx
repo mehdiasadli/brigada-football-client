@@ -3,7 +3,6 @@ import { useMatch } from '../api/matches/matches.queries';
 import ErrorComponent from '../components/error-component';
 import LoadingComponent from '../components/loading-component';
 import CompleteMatch from '../components/complete-match';
-import { Container } from '@mantine/core';
 
 export default function CompleteMatchPage() {
   const { matchId } = useParams() as { matchId: string };
@@ -18,9 +17,5 @@ export default function CompleteMatchPage() {
     return <LoadingComponent />;
   }
 
-  return (
-    <Container size='md' py='xl'>
-      <CompleteMatch match={match.data} />
-    </Container>
-  );
+  return <CompleteMatch match={match.data} />;
 }

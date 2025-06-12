@@ -1,4 +1,4 @@
-import { Stack, Container, Box } from '@mantine/core';
+import { Box, Stack } from '@mantine/core';
 import { useMatches } from '../api/matches/matches.queries';
 import InfiniteList from '../components/infinite-list';
 import FixtureCard from '../components/fixture-card';
@@ -23,20 +23,17 @@ export default function FixturePage() {
     <Box
       style={{
         minHeight: '100vh',
-        background: 'linear-gradient(180deg, var(--mantine-color-blue-0) 0%, var(--mantine-color-gray-0) 100%)',
       }}
     >
-      <Container size='xl' py='xl'>
-        <Stack gap='xl'>
-          <FixturesHeader />
+      <Stack>
+        <FixturesHeader />
 
-          <InfiniteList
-            result={result}
-            cols={{ base: 1, sm: 1, md: 2, lg: 2, xl: 2 }}
-            render={(match) => <FixtureCard match={match} />}
-          />
-        </Stack>
-      </Container>
+        <InfiniteList
+          result={result}
+          cols={{ base: 1, sm: 2, md: 2, lg: 2, xl: 2 }}
+          render={(match) => <FixtureCard match={match} />}
+        />
+      </Stack>
     </Box>
   );
 }

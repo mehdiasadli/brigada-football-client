@@ -1,7 +1,7 @@
 import { useForm } from '@mantine/form';
 import { createMatchSchema, type CreateMatchSchema } from '../schemas/matches.schema';
 import { zodResolver } from 'mantine-form-zod-resolver';
-import { Button, Container, Stack, Title, Paper, Text, Box, ThemeIcon, Group, Card, rem } from '@mantine/core';
+import { Button, Stack, Title, Paper, Text, Box, ThemeIcon, Group, Card, rem, Space } from '@mantine/core';
 import { MatchStatus, type MatchSchema } from '../schemas/entities/match.entity';
 import { IconBallFootball, IconTrophy, IconCalendarEvent, IconInfoCircle, IconFlag } from '@tabler/icons-react';
 import { useCreateMatch } from '../api/matches/matches.mutations';
@@ -88,173 +88,171 @@ export default function CreateMatch({ status }: CreateMatchProps) {
   );
 
   return (
-    <Container size='lg' py='xl'>
-      <form onSubmit={onSubmit}>
-        <Stack gap='xl'>
-          {/* Header Section */}
-          <Paper
-            shadow='xl'
-            radius='xl'
-            p='xl'
-            style={{
-              background: `linear-gradient(135deg, 
+    <form onSubmit={onSubmit}>
+      <Stack gap='xl'>
+        {/* Header Section */}
+        <Paper
+          shadow='xl'
+          radius='xl'
+          p='xl'
+          style={{
+            background: `linear-gradient(135deg, 
                 ${isResult ? 'var(--mantine-color-green-6)' : 'var(--mantine-color-blue-6)'} 0%, 
                 ${isResult ? 'var(--mantine-color-teal-6)' : 'var(--mantine-color-indigo-6)'} 100%)`,
-              color: 'white',
-              position: 'relative',
-              overflow: 'hidden',
-            }}
-          >
-            {/* Soccer field pattern */}
-            <Box
-              style={{
-                position: 'absolute',
-                top: 0,
-                right: 0,
-                width: '200px',
-                height: '100px',
-                background:
-                  "url(\"data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='white' fill-opacity='0.1'%3E%3Cpath d='M20 20c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10zm10 0c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10z'/%3E%3C/g%3E%3C/svg%3E\")",
-                opacity: 0.3,
-              }}
-            />
-
-            <Group align='center' gap='lg'>
-              <ThemeIcon
-                size={80}
-                radius='xl'
-                color='white'
-                variant='white'
-                style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)' }}
-              >
-                {isResult ? <IconTrophy size={40} /> : <IconBallFootball size={40} />}
-              </ThemeIcon>
-
-              <Box>
-                <Title order={1} fw={900} mb='sm'>
-                  Create New {isResult ? 'Match Result' : 'Match Fixture'}
-                </Title>
-                <Text size='lg' opacity={0.9}>
-                  {isResult ? 'Record the outcome of a completed match' : 'Schedule an upcoming football match'}
-                </Text>
-              </Box>
-            </Group>
-          </Paper>
-
-          {/* Match Details Section */}
-          <Card shadow='md' radius='xl' p='xl' withBorder>
-            <Group align='center' gap='sm' mb='xl'>
-              <ThemeIcon size={32} radius='xl' color='blue' variant='light'>
-                <IconInfoCircle size={18} />
-              </ThemeIcon>
-              <Title order={3} fw={700} c='gray.8'>
-                Match Information
-              </Title>
-            </Group>
-
-            <Stack gap='lg'>
-              <MatchDescriptionInput form={form} />
-              <StartTimeInput form={form} status={status} />
-              <DurationInput form={form} />
-              <WeatherConditionInput form={form} />
-              <VenueInput form={form} />
-            </Stack>
-          </Card>
-
-          {/* Rules & Guidelines */}
-          <Paper
-            p='lg'
-            radius='lg'
+            color: 'white',
+            position: 'relative',
+            overflow: 'hidden',
+          }}
+        >
+          {/* Soccer field pattern */}
+          <Box
             style={{
-              backgroundColor: 'var(--mantine-color-blue-0)',
-              border: '2px solid var(--mantine-color-blue-2)',
+              position: 'absolute',
+              top: 0,
+              right: 0,
+              width: '200px',
+              height: '100px',
+              background:
+                "url(\"data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='white' fill-opacity='0.1'%3E%3Cpath d='M20 20c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10zm10 0c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10z'/%3E%3C/g%3E%3C/svg%3E\")",
+              opacity: 0.3,
             }}
-          >
-            <Group align='center' gap='sm' mb='md'>
-              <ThemeIcon size={24} radius='xl' color='blue' variant='filled'>
-                <IconFlag size={14} />
-              </ThemeIcon>
-              <Text size='sm' fw={700} c='blue.8' tt='uppercase'>
-                Match Rules & Guidelines
-              </Text>
-            </Group>
+          />
 
-            <Stack gap='xs'>
-              <Text size='sm' c='blue.7'>
-                • Each team must have at least 1 player to start the match
-              </Text>
-              <Text size='sm' c='blue.7'>
-                • Each team can have only 1 captain (team leader)
-              </Text>
-              <Text size='sm' c='blue.7'>
-                • Team names are optional but recommended for easy identification
-              </Text>
-              <Text size='sm' c='blue.7'>
-                • Players can be linked to user accounts or added as names only
-              </Text>
-            </Stack>
-          </Paper>
-
-          {/* Teams Section */}
-          <Stack gap='xl'>
-            <Group align='center' gap='sm'>
-              <ThemeIcon size={32} radius='xl' color='green' variant='light'>
-                <IconBallFootball size={18} />
-              </ThemeIcon>
-              <Title order={3} fw={700} c='gray.8'>
-                Team Squads
-              </Title>
-            </Group>
-
-            {/* Team Cards */}
-            <Box
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(450px, 1fr))',
-                gap: rem(24),
-              }}
+          <Group align='center' gap='lg'>
+            <ThemeIcon
+              size={80}
+              radius='xl'
+              color='white'
+              variant='white'
+              style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)' }}
             >
-              <PlayersView teamIndex={1} form={form} isResult={isResult} />
-              <PlayersView teamIndex={2} form={form} isResult={isResult} />
-            </Box>
-          </Stack>
+              {isResult ? <IconTrophy size={40} /> : <IconBallFootball size={40} />}
+            </ThemeIcon>
 
-          {/* Submit Button */}
-          <Paper
-            shadow='lg'
-            radius='xl'
-            p='lg'
+            <Box>
+              <Title order={1} fw={900} mb='sm'>
+                Create New {isResult ? 'Match Result' : 'Match Fixture'}
+              </Title>
+              <Text size='lg' opacity={0.9}>
+                {isResult ? 'Record the outcome of a completed match' : 'Schedule an upcoming football match'}
+              </Text>
+            </Box>
+          </Group>
+        </Paper>
+
+        {/* Match Details Section */}
+        <Card shadow='md' radius='xl' p='xl' withBorder>
+          <Group align='center' gap='sm' mb='xl'>
+            <ThemeIcon size={32} radius='xl' color='blue' variant='light'>
+              <IconInfoCircle size={18} />
+            </ThemeIcon>
+            <Title order={3} fw={700} c='gray.8'>
+              Match Information
+            </Title>
+          </Group>
+
+          <Stack gap='lg'>
+            <MatchDescriptionInput form={form} />
+            <StartTimeInput form={form} status={status} />
+            <DurationInput form={form} />
+            <WeatherConditionInput form={form} />
+            <VenueInput form={form} />
+          </Stack>
+        </Card>
+
+        {/* Rules & Guidelines */}
+        <Paper
+          p='lg'
+          radius='lg'
+          style={{
+            backgroundColor: 'var(--mantine-color-blue-0)',
+            border: '2px solid var(--mantine-color-blue-2)',
+          }}
+        >
+          <Group align='center' gap='sm' mb='md'>
+            <ThemeIcon size={24} radius='xl' color='blue' variant='filled'>
+              <IconFlag size={14} />
+            </ThemeIcon>
+            <Text size='sm' fw={700} c='blue.8' tt='uppercase'>
+              Match Rules & Guidelines
+            </Text>
+          </Group>
+
+          <Stack gap='xs'>
+            <Text size='sm' c='blue.7'>
+              • Each team must have at least 1 player to start the match
+            </Text>
+            <Text size='sm' c='blue.7'>
+              • Each team can have only 1 captain (team leader)
+            </Text>
+            <Text size='sm' c='blue.7'>
+              • Team names are optional but recommended for easy identification
+            </Text>
+            <Text size='sm' c='blue.7'>
+              • Players can be linked to user accounts or added as names only
+            </Text>
+          </Stack>
+        </Paper>
+
+        {/* Teams Section */}
+        <Stack gap='xl'>
+          <Group align='center' gap='sm'>
+            <ThemeIcon size={32} radius='xl' color='green' variant='light'>
+              <IconBallFootball size={18} />
+            </ThemeIcon>
+            <Title order={3} fw={700} c='gray.8'>
+              Team Squads
+            </Title>
+          </Group>
+
+          {/* Team Cards */}
+          <Box
             style={{
-              background: `linear-gradient(135deg, 
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
+              gap: rem(24),
+            }}
+          >
+            <PlayersView teamIndex={1} form={form} isResult={isResult} />
+            <Space h='xs' />
+            <PlayersView teamIndex={2} form={form} isResult={isResult} />
+          </Box>
+        </Stack>
+
+        {/* Submit Button */}
+        <Paper
+          radius='xl'
+          p='lg'
+          style={{
+            background: `linear-gradient(135deg, 
                 ${isResult ? 'var(--mantine-color-green-0)' : 'var(--mantine-color-blue-0)'} 0%, 
                 white 100%)`,
-              border: `2px solid ${isResult ? 'var(--mantine-color-green-2)' : 'var(--mantine-color-blue-2)'}`,
+            border: `2px solid ${isResult ? 'var(--mantine-color-green-2)' : 'var(--mantine-color-blue-2)'}`,
+          }}
+        >
+          <Button
+            loading={mutation.isPending}
+            type='submit'
+            size='xl'
+            radius='xl'
+            fullWidth
+            variant='gradient'
+            gradient={{
+              from: isResult ? 'green' : 'blue',
+              to: isResult ? 'teal' : 'indigo',
+            }}
+            leftSection={isResult ? <IconTrophy size={24} /> : <IconCalendarEvent size={24} />}
+            style={{
+              height: rem(60),
+              fontSize: rem(18),
+              fontWeight: 700,
+              boxShadow: `0 8px 16px ${isResult ? 'rgba(34, 197, 94, 0.3)' : 'rgba(59, 130, 246, 0.3)'}`,
             }}
           >
-            <Button
-              loading={mutation.isPending}
-              type='submit'
-              size='xl'
-              radius='xl'
-              fullWidth
-              variant='gradient'
-              gradient={{
-                from: isResult ? 'green' : 'blue',
-                to: isResult ? 'teal' : 'indigo',
-              }}
-              leftSection={isResult ? <IconTrophy size={24} /> : <IconCalendarEvent size={24} />}
-              style={{
-                height: rem(60),
-                fontSize: rem(18),
-                fontWeight: 700,
-                boxShadow: `0 8px 16px ${isResult ? 'rgba(34, 197, 94, 0.3)' : 'rgba(59, 130, 246, 0.3)'}`,
-              }}
-            >
-              {isResult ? 'Record Match Result' : 'Schedule Match Fixture'}
-            </Button>
-          </Paper>
-        </Stack>
-      </form>
-    </Container>
+            {isResult ? 'Record Match Result' : 'Schedule Match Fixture'}
+          </Button>
+        </Paper>
+      </Stack>
+    </form>
   );
 }

@@ -1,4 +1,4 @@
-import { Badge, Group, Stack, Text, ThemeIcon, Paper, Box, rem, Anchor } from '@mantine/core';
+import { Badge, Group, Stack, Text, ThemeIcon, Paper, Box, rem, Anchor, Flex } from '@mantine/core';
 import type { FindOneMatchResponse } from '../api/matches/matches.responses';
 import { MatchStatus } from '../schemas/entities/match.entity';
 import { getTeamStats } from '../utils/team-utils';
@@ -91,7 +91,18 @@ export default function MatchHeader({ match }: MatchHeaderProps) {
               </Text>
             </Group>
 
-            <Group justify='space-between' align='center' w='100%' maw={600}>
+            <Flex
+              justify='space-between'
+              align='center'
+              w='100%'
+              maw={600}
+              gap='sm'
+              sx={(_, u) => ({
+                [u.smallerThan('xs')]: {
+                  flexDirection: 'column',
+                },
+              })}
+            >
               {/* Home Team */}
               <Stack align='center' gap='xs' style={{ flex: 1 }}>
                 <Text
@@ -161,7 +172,7 @@ export default function MatchHeader({ match }: MatchHeaderProps) {
                   </Badge>
                 )}
               </Stack>
-            </Group>
+            </Flex>
           </Stack>
         ) : (
           // Upcoming Match - Show VS

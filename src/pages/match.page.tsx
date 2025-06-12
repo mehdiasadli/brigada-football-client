@@ -47,22 +47,20 @@ export default function MatchPage() {
   const isCreator = match.creatorId === user?.id;
 
   return (
-    <Container size='xl' py='xl'>
-      <Stack gap='xl'>
-        <MatchHeader match={match} />
+    <Stack gap='xl'>
+      <MatchHeader match={match} />
 
-        <Box
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
-            gap: rem(24),
-          }}
-        >
-          <TeamCard team={match.teams[0]} teamIndex={1} status={match.status} isCreator={isCreator} align='left' />
-          <TeamCard team={match.teams[1]} teamIndex={2} status={match.status} isCreator={isCreator} align='right' />
-        </Box>
-      </Stack>
-    </Container>
+      <Box
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
+          gap: rem(24),
+        }}
+      >
+        <TeamCard team={match.teams[0]} teamIndex={1} status={match.status} isCreator={isCreator} align='left' />
+        <TeamCard team={match.teams[1]} teamIndex={2} status={match.status} isCreator={isCreator} align='right' />
+      </Box>
+    </Stack>
   );
 }
 
@@ -84,9 +82,9 @@ function TeamCard({
 
   return (
     <Paper
-      shadow='xl'
+      shadow='sm'
       radius='xl'
-      p='xl'
+      p='lg'
       style={{
         background: `linear-gradient(135deg, var(--mantine-color-${teamColor}-0) 0%, white 100%)`,
         border: `2px solid var(--mantine-color-${teamColor}-2)`,

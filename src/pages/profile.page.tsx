@@ -87,7 +87,7 @@ export default function ProfilePage() {
         <Paper
           shadow='xl'
           radius='xl'
-          p='xl'
+          p='lg'
           style={{
             background: 'linear-gradient(135deg, var(--mantine-color-blue-6) 0%, var(--mantine-color-indigo-6) 100%)',
             color: 'white',
@@ -118,7 +118,6 @@ export default function ProfilePage() {
                 radius='xl'
                 style={{
                   border: '4px solid rgba(255, 255, 255, 0.3)',
-                  boxShadow: '0 8px 24px rgba(0, 0, 0, 0.2)',
                 }}
               >
                 <Text size='xl' fw={700}>

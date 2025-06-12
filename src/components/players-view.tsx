@@ -60,7 +60,6 @@ export default function PlayersView({ teamIndex, form, isResult }: PlayersViewPr
         radius='xl'
         p='xl'
         style={{
-          background: `linear-gradient(135deg, ${teamColorShade}15 0%, ${teamColorShade}05 100%)`,
           border: `2px solid ${teamColorShade}30`,
           position: 'relative',
           overflow: 'hidden',
@@ -309,11 +308,9 @@ export default function PlayersView({ teamIndex, form, isResult }: PlayersViewPr
 
       {/* Add Player Button - Stadium Style */}
       <Paper
-        shadow='md'
         radius='xl'
         p='lg'
         style={{
-          background: `linear-gradient(135deg, ${teamColorShade}10 0%, transparent 100%)`,
           border: `2px dashed ${teamColorShade}60`,
           cursor: 'pointer',
           transition: 'all 0.3s ease',

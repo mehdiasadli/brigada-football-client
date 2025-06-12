@@ -3,7 +3,6 @@ import type { LeaderboardResponse } from '../api/stats/stats.responses';
 import ErrorComponent from '../components/error-component';
 import LoadingComponent from '../components/loading-component';
 import {
-  Container,
   Paper,
   Tabs,
   Stack,
@@ -479,93 +478,91 @@ export default function StatsPage() {
   };
 
   return (
-    <Container size='xl' py='xl'>
-      <Stack gap='xl'>
-        {/* Page Header */}
-        <Paper
-          shadow='xl'
-          radius='xl'
-          p='xl'
+    <Stack gap='xl'>
+      {/* Page Header */}
+      <Paper
+        shadow='xl'
+        radius='xl'
+        p='xl'
+        style={{
+          background: 'linear-gradient(135deg, var(--mantine-color-green-6) 0%, var(--mantine-color-teal-6) 100%)',
+          color: 'white',
+          position: 'relative',
+          overflow: 'hidden',
+        }}
+      >
+        <Box
           style={{
-            background: 'linear-gradient(135deg, var(--mantine-color-green-6) 0%, var(--mantine-color-teal-6) 100%)',
-            color: 'white',
-            position: 'relative',
-            overflow: 'hidden',
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            width: '300px',
+            height: '120px',
+            background:
+              "url(\"data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='white' fill-opacity='0.1'%3E%3Ccircle cx='20' cy='20' r='3'/%3E%3Cpath d='M20 0v40M0 20h40'/%3E%3C/g%3E%3C/svg%3E\")",
+            opacity: 0.3,
           }}
-        >
-          <Box
-            style={{
-              position: 'absolute',
-              top: 0,
-              right: 0,
-              width: '300px',
-              height: '120px',
-              background:
-                "url(\"data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='white' fill-opacity='0.1'%3E%3Ccircle cx='20' cy='20' r='3'/%3E%3Cpath d='M20 0v40M0 20h40'/%3E%3C/g%3E%3C/svg%3E\")",
-              opacity: 0.3,
-            }}
-          />
+        />
 
-          <Group align='center' gap='lg'>
-            <ThemeIcon
-              size={80}
-              radius='xl'
-              color='white'
-              variant='white'
-              style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)' }}
-            >
-              <IconChartBar size={40} />
-            </ThemeIcon>
-
-            <Box>
-              <Title order={1} fw={900} mb='sm'>
-                Player Statistics & Leaderboards
-              </Title>
-              <Text size='lg' opacity={0.9}>
-                Discover top performers and community champions
-              </Text>
-            </Box>
-          </Group>
-        </Paper>
-
-        {/* Leaderboard Tabs */}
-        <Tabs defaultValue='goals' variant='pills' radius='xl'>
-          <Tabs.List
-            grow
-            mb='xl'
-            style={{ backgroundColor: 'var(--mantine-color-gray-0)', padding: rem(8), borderRadius: rem(16) }}
+        <Group align='center' gap='lg'>
+          <ThemeIcon
+            size={80}
+            radius='xl'
+            color='white'
+            variant='white'
+            style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)' }}
           >
-            <Tabs.Tab value='goals' leftSection={<IconTarget size={16} />} style={{ fontWeight: 600 }}>
-              Goal Scorers
-            </Tabs.Tab>
-            <Tabs.Tab value='assists' leftSection={<IconHandGrab size={16} />} style={{ fontWeight: 600 }}>
-              Assist Providers
-            </Tabs.Tab>
-            <Tabs.Tab value='rating' leftSection={<IconStar size={16} />} style={{ fontWeight: 600 }}>
-              Top Rated
-            </Tabs.Tab>
-            <Tabs.Tab value='activity' leftSection={<IconUsers size={16} />} style={{ fontWeight: 600 }}>
-              Most Active
-            </Tabs.Tab>
-          </Tabs.List>
+            <IconChartBar size={40} />
+          </ThemeIcon>
 
-          <Tabs.Panel value='goals'>
-            <GoalsLeaderboard />
-          </Tabs.Panel>
+          <Box>
+            <Title order={1} fw={900} mb='sm'>
+              Player Statistics & Leaderboards
+            </Title>
+            <Text size='lg' opacity={0.9}>
+              Discover top performers and community champions
+            </Text>
+          </Box>
+        </Group>
+      </Paper>
 
-          <Tabs.Panel value='assists'>
-            <AssistsLeaderboard />
-          </Tabs.Panel>
+      {/* Leaderboard Tabs */}
+      <Tabs defaultValue='goals' variant='pills' radius='xl'>
+        <Tabs.List
+          grow
+          mb='xl'
+          style={{ backgroundColor: 'var(--mantine-color-gray-0)', padding: rem(8), borderRadius: rem(16) }}
+        >
+          <Tabs.Tab value='goals' leftSection={<IconTarget size={16} />} style={{ fontWeight: 600 }}>
+            Goal Scorers
+          </Tabs.Tab>
+          <Tabs.Tab value='assists' leftSection={<IconHandGrab size={16} />} style={{ fontWeight: 600 }}>
+            Assist Providers
+          </Tabs.Tab>
+          <Tabs.Tab value='rating' leftSection={<IconStar size={16} />} style={{ fontWeight: 600 }}>
+            Top Rated
+          </Tabs.Tab>
+          <Tabs.Tab value='activity' leftSection={<IconUsers size={16} />} style={{ fontWeight: 600 }}>
+            Most Active
+          </Tabs.Tab>
+        </Tabs.List>
 
-          <Tabs.Panel value='rating'>
-            <RatingLeaderboard />
-          </Tabs.Panel>
+        <Tabs.Panel value='goals'>
+          <GoalsLeaderboard />
+        </Tabs.Panel>
 
-          <Tabs.Panel value='activity'>
-            <ActivityLeaderboard />
-          </Tabs.Panel>
-        </Tabs>
-      </Stack>
-    </Container>
+        <Tabs.Panel value='assists'>
+          <AssistsLeaderboard />
+        </Tabs.Panel>
+
+        <Tabs.Panel value='rating'>
+          <RatingLeaderboard />
+        </Tabs.Panel>
+
+        <Tabs.Panel value='activity'>
+          <ActivityLeaderboard />
+        </Tabs.Panel>
+      </Tabs>
+    </Stack>
   );
 }
