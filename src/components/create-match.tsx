@@ -12,6 +12,7 @@ import StartTimeInput from './match-inputs/start-time.input';
 import MatchDescriptionInput from './match-inputs/match-description.input';
 import PlayersView from './players-view';
 import { notifications } from '@mantine/notifications';
+import { VenueInput } from './venue-input';
 
 interface CreateMatchProps {
   status: MatchSchema['status'];
@@ -153,13 +154,10 @@ export default function CreateMatch({ status }: CreateMatchProps) {
 
             <Stack gap='lg'>
               <MatchDescriptionInput form={form} />
-
-              <Group grow align='flex-start'>
-                <StartTimeInput form={form} status={status} />
-                <DurationInput form={form} />
-              </Group>
-
+              <StartTimeInput form={form} status={status} />
+              <DurationInput form={form} />
               <WeatherConditionInput form={form} />
+              <VenueInput form={form} />
             </Stack>
           </Card>
 

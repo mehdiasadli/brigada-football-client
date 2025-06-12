@@ -6,6 +6,8 @@ import type { FindAllMatchesResponse } from '../api/matches/matches.responses';
 import MatchCardActions from './match-card-actions';
 import { getWeatherCondition } from '../resources/weather-map';
 import { Link } from 'react-router-dom';
+import { modals } from '@mantine/modals';
+import { VenueMapModal } from './venue-map-modal';
 
 dayjs.extend(relativeTime);
 
@@ -19,6 +21,16 @@ export default function FixtureCard({ match }: FixtureCardProps) {
   const isUpcoming = dayjs(match.startTime).isAfter(dayjs());
   const isToday = dayjs(match.startTime).isSame(dayjs(), 'day');
   const timeUntilMatch = dayjs(match.startTime).fromNow();
+
+  const openVenueMapModal = () => {
+    if (!match.venue) return;
+
+    modals.open({
+      withCloseButton: false,
+      size: 'xl',
+      children: <VenueMapModal venue={match.venue} />,
+    });
+  };
 
   return (
     <Card
@@ -124,9 +136,13 @@ export default function FixtureCard({ match }: FixtureCardProps) {
               <ThemeIcon size={20} radius='xl' color='orange' variant='light'>
                 <IconMapPin size={12} />
               </ThemeIcon>
-              <Text size='sm' fw={600} c='gray.7'>
-                {match.venueName}
-              </Text>
+              {!match.venue ? (
+                <Text size='sm' fw={600} c='gray.7'>
+                  {match.venueName}
+                </Text>
+              ) : (
+                <Anchor onClick={openVenueMapModal}>{match.venueName}</Anchor>
+              )}
             </Group>
           )}
 

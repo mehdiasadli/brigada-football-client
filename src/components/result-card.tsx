@@ -28,6 +28,8 @@ import MatchCardActions from './match-card-actions';
 import { Link } from 'react-router-dom';
 import { getTeamStats } from '../utils/team-utils';
 import { sortPlayers } from '../utils/team-utils';
+import { modals } from '@mantine/modals';
+import { VenueMapModal } from './venue-map-modal';
 
 interface ResultCardProps {
   match: FindAllMatchesResponse;
@@ -42,6 +44,16 @@ export default function ResultCard({ match }: ResultCardProps) {
 
   const winner =
     homeTeamStats.goals > awayTeamStats.goals ? 'home' : awayTeamStats.goals > homeTeamStats.goals ? 'away' : 'draw';
+
+  const openVenueMapModal = () => {
+    if (!match.venue) return;
+
+    modals.open({
+      withCloseButton: false,
+      size: 'xl',
+      children: <VenueMapModal venue={match.venue} />,
+    });
+  };
 
   return (
     <Card
@@ -178,9 +190,13 @@ export default function ResultCard({ match }: ResultCardProps) {
             <ThemeIcon size={20} radius='xl' color='gray' variant='light'>
               <IconMapPin size={12} />
             </ThemeIcon>
-            <Text size='sm' c='gray.6'>
-              {match.venueName || 'Venue TBD'}
-            </Text>
+            {!match.venue ? (
+              <Text size='sm' c='gray.6'>
+                {match.venueName || 'Venue TBD'}
+              </Text>
+            ) : (
+              <Anchor onClick={openVenueMapModal}>{match.venue.name}</Anchor>
+            )}
           </Group>
 
           <Group gap='sm'>

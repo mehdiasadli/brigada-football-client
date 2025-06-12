@@ -10,6 +10,7 @@ import WeatherConditionInput from './match-inputs/weather-condition';
 import DurationInput from './match-inputs/duration.input';
 import StartTimeInput from './match-inputs/start-time.input';
 import MatchDescriptionInput from './match-inputs/match-description.input';
+import { VenueInput } from './venue-input';
 
 interface EditMatchFormProps {
   match: FindOneMatchResponse;
@@ -63,6 +64,7 @@ export default function EditMatchForm({ match }: EditMatchFormProps) {
             </Grid>
 
             <WeatherConditionInput form={form} />
+            <VenueInput form={form} />
           </Stack>
         </Paper>
 

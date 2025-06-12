@@ -1,10 +1,12 @@
-import { Badge, Group, Stack, Text, ThemeIcon, Paper, Box, rem } from '@mantine/core';
+import { Badge, Group, Stack, Text, ThemeIcon, Paper, Box, rem, Anchor } from '@mantine/core';
 import type { FindOneMatchResponse } from '../api/matches/matches.responses';
 import { MatchStatus } from '../schemas/entities/match.entity';
 import { getTeamStats } from '../utils/team-utils';
 import { getWeatherCondition } from '../resources/weather-map';
 import { IconMapPin, IconClock, IconCalendar, IconBallFootball, IconTrophy, IconVs } from '@tabler/icons-react';
 import dayjs from 'dayjs';
+import { VenueMapModal } from './venue-map-modal';
+import { modals } from '@mantine/modals';
 
 interface MatchHeaderProps {
   match: FindOneMatchResponse;
@@ -30,6 +32,16 @@ export default function MatchHeader({ match }: MatchHeaderProps) {
         ? 'away'
         : 'draw'
     : null;
+
+  const openVenueMapModal = () => {
+    if (!match.venue) return;
+
+    modals.open({
+      withCloseButton: false,
+      size: 'xl',
+      children: <VenueMapModal venue={match.venue} />,
+    });
+  };
 
   return (
     <Stack gap='xl'>
@@ -287,9 +299,15 @@ export default function MatchHeader({ match }: MatchHeaderProps) {
                 </Text>
               </Group>
 
-              <Text size='lg' fw={700} c='gray.8' ta='center'>
-                {match.venueName}
-              </Text>
+              {!match.venue ? (
+                <Text size='lg' fw={700} c='gray.8' ta='center'>
+                  {match.venueName}
+                </Text>
+              ) : (
+                <Anchor size='lg' onClick={openVenueMapModal}>
+                  {match.venue.name}
+                </Anchor>
+              )}
             </Stack>
           </Paper>
         )}
