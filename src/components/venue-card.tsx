@@ -1,15 +1,18 @@
-import { Group, Card, Text, Badge, Stack, Box, Button } from '@mantine/core';
-import { IconMap, IconPhone, IconUser, IconCurrencyDollar } from '@tabler/icons-react';
+import { Group, Card, Text, Badge, ActionIcon, Stack, Box, Menu, Button } from '@mantine/core';
+import { IconTrash, IconDots, IconMap, IconPhone, IconUser, IconCurrencyDollar } from '@tabler/icons-react';
 
 import { VenueType, type VenueSchema } from '../schemas/entities/venue.entity';
 import { modals } from '@mantine/modals';
 import { VenueMapModal } from './venue-map-modal';
+import { useDeleteVenue } from '../api/venues/venues.mutations';
 
 interface VenueCardProps {
   venue: VenueSchema;
 }
 
 export function VenueCard({ venue }: VenueCardProps) {
+  const mutation = useDeleteVenue();
+
   const getTypeColor = (type: (typeof VenueType.options)[number]) => {
     switch (type) {
       case VenueType.enum.INDOOR:
@@ -41,6 +44,24 @@ export function VenueCard({ venue }: VenueCardProps) {
       withCloseButton: false,
       size: 'xl',
       children: <VenueMapModal venue={venue} />,
+    });
+
+  const openDeleteModal = () =>
+    modals.openConfirmModal({
+      title: 'Delete Venue',
+      children: 'Are you sure you want to delete this venue? This action cannot be undone.',
+      labels: { confirm: 'Delete', cancel: 'Cancel' },
+      confirmProps: {
+        color: 'red',
+        loading: mutation.isPending,
+        variant: 'filled',
+      },
+      cancelProps: { variant: 'light' },
+      zIndex: 10000,
+      onConfirm: () => {
+        mutation.mutate(venue.id);
+        modals.closeAll();
+      },
     });
 
   return (
@@ -80,7 +101,7 @@ export function VenueCard({ venue }: VenueCardProps) {
             </Group>
           </Box>
 
-          {/* <Menu shadow='md' width={200}>
+          <Menu shadow='md' width={200}>
             <Menu.Target>
               <ActionIcon variant='subtle' color='gray'>
                 <IconDots size={16} />
@@ -88,13 +109,13 @@ export function VenueCard({ venue }: VenueCardProps) {
             </Menu.Target>
 
             <Menu.Dropdown>
-              <Menu.Item leftSection={<IconEye size={14} />}>View Details</Menu.Item>
-              <Menu.Item leftSection={<IconEdit size={14} />}>Edit Venue</Menu.Item>
-              <Menu.Item leftSection={<IconTrash size={14} />} color='red'>
+              {/* <Menu.Item leftSection={<IconEye size={14} />}>View Details</Menu.Item> */}
+              {/* <Menu.Item leftSection={<IconEdit size={14} />}>Edit Venue</Menu.Item> */}
+              <Menu.Item leftSection={<IconTrash size={14} />} color='red' onClick={openDeleteModal}>
                 Delete Venue
               </Menu.Item>
             </Menu.Dropdown>
-          </Menu> */}
+          </Menu>
         </Group>
       </Card.Section>
 

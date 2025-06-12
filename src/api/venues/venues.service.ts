@@ -21,4 +21,5 @@ export const venuesService = {
     }),
   venuesOnMap: () => api.get<VenueSchema[]>('/map'),
   create: (data: CreateVenueSchema) => api.post<VenueSchema, CreateVenueSchema>('/', data),
+  delete: (id: string) => api.delete<void>(`/${id}`),
 };

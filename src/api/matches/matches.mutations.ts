@@ -105,7 +105,6 @@ export function useUpdateMatch() {
     showOnError: true,
     showOnSuccess: 'Match updated successfully',
     redirectOnSuccess: ({ data }) => (data.status === MatchStatus.enum.PENDING ? '/fixture' : '/results'),
-    // handle optimistic update
     async onMutate(vars) {
       const matchId = vars.id;
 
