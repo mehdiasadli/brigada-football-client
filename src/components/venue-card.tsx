@@ -65,13 +65,7 @@ export function VenueCard({ venue }: VenueCardProps) {
     });
 
   return (
-    <Card
-      key={venue.id}
-      shadow='sm'
-      padding='lg'
-      radius='md'
-      style={{ border: '1px solid var(--mantine-color-gray-2)' }}
-    >
+    <Card shadow='sm' padding='lg' radius='md' style={{ border: '1px solid var(--mantine-color-gray-2)' }}>
       <Card.Section p='md' pb='xs'>
         <Group justify='space-between' align='flex-start'>
           <Box style={{ flex: 1 }}>

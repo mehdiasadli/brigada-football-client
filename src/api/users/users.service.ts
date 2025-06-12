@@ -1,4 +1,4 @@
-import type { UserSchema } from '../../schemas/entities/user.entity';
+import type { UserRole, UserSchema } from '../../schemas/entities/user.entity';
 import type { PaginatedResult } from '../../schemas/query.schema';
 import type { PaginationSchema } from '../../schemas/query.schema';
 import type { OrderSchema } from '../../schemas/query.schema';
@@ -19,4 +19,14 @@ export const usersService = {
     await api.get<UserSchema[]>('/search/players', {
       params: { query, excludeIds },
     }),
+  updateRole: async (data: UpdateRoleData) =>
+    await api.put<UserSchema, Omit<UpdateRoleData, 'userId'>>(`/update-role/${data.userId}`, {
+      role: data.role,
+    }),
+  delete: async (id: string) => await api.delete<UserSchema>(`/${id}`),
+};
+
+type UpdateRoleData = {
+  userId: string;
+  role: (typeof UserRole.options)[number];
 };

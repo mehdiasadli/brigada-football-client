@@ -1,5 +1,5 @@
-import { Group, Paper, ThemeIcon, Text, Box, rem } from '@mantine/core';
-import { IconDashboard, IconMapPin } from '@tabler/icons-react';
+import { Paper, ThemeIcon, Text, Box, rem, Flex } from '@mantine/core';
+import { IconDashboard, IconMapPin, IconUsers } from '@tabler/icons-react';
 import { Link, useLocation } from 'react-router-dom';
 
 const dashboardLinks = [
@@ -15,12 +15,12 @@ const dashboardLinks = [
     Icon: IconMapPin,
     color: 'green',
   },
-  // {
-  //   label: 'Users',
-  //   to: '/dashboard/users',
-  //   Icon: IconUsers,
-  //   color: 'indigo',
-  // },
+  {
+    label: 'Users',
+    to: '/dashboard/users',
+    Icon: IconUsers,
+    color: 'indigo',
+  },
   // {
   //   label: 'Matches',
   //   to: '/dashboard/matches',
@@ -49,12 +49,12 @@ export function DashboardNavigation() {
           borderTop: `3px solid var(--mantine-color-green-4)`,
           borderRadius: rem(16),
           backdropFilter: 'blur(10px)',
-          padding: `${rem(12)} ${rem(20)}`,
+          padding: `${rem(3)} ${rem(5)}`,
           border: '1px solid rgba(255, 255, 255, 0.3)',
           boxShadow: '0 8px 32px rgba(0, 0, 0, 0.15)',
         }}
       >
-        <Group gap={rem(8)} justify='center'>
+        <Flex gap={rem(8)} justify='center'>
           {dashboardLinks.map((link) => {
             const isActive = location.pathname === link.to;
 
@@ -108,7 +108,7 @@ export function DashboardNavigation() {
               </Box>
             );
           })}
-        </Group>
+        </Flex>
       </Paper>
     </Box>
   );
