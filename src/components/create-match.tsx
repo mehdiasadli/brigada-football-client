@@ -1,7 +1,7 @@
 import { useForm } from '@mantine/form';
 import { createMatchSchema, type CreateMatchSchema } from '../schemas/matches.schema';
 import { zodResolver } from 'mantine-form-zod-resolver';
-import { Button, Stack, Title, Paper, Text, Box, ThemeIcon, Group, Card, rem, Space } from '@mantine/core';
+import { Button, Stack, Title, Paper, Text, Box, ThemeIcon, Group, Card, rem } from '@mantine/core';
 import { MatchStatus, type MatchSchema } from '../schemas/entities/match.entity';
 import { IconBallFootball, IconTrophy, IconCalendarEvent, IconInfoCircle, IconFlag } from '@tabler/icons-react';
 import { useCreateMatch } from '../api/matches/matches.mutations';
@@ -214,7 +214,6 @@ export default function CreateMatch({ status }: CreateMatchProps) {
             }}
           >
             <PlayersView teamIndex={1} form={form} isResult={isResult} />
-            <Space h='xs' />
             <PlayersView teamIndex={2} form={form} isResult={isResult} />
           </Box>
         </Stack>
