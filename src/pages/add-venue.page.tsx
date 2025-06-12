@@ -2,7 +2,6 @@ import {
   Box,
   Button,
   Card,
-  Container,
   Group,
   NumberInput,
   Paper,
@@ -62,141 +61,139 @@ export default function AddVenuePage() {
   };
 
   return (
-    <Container size='lg' py='xl'>
-      <form onSubmit={onSubmit}>
-        <Stack gap='xl'>
-          {/* Header Section */}
-          <Paper
-            shadow='xl'
-            radius='xl'
-            p='xl'
+    <form onSubmit={onSubmit}>
+      <Stack gap='xl'>
+        {/* Header Section */}
+        <Paper
+          shadow='xl'
+          radius='xl'
+          p='xl'
+          style={{
+            background: 'linear-gradient(135deg, var(--mantine-color-yellow-6) 0%, var(--mantine-color-teal-3) 100%)',
+            color: 'white',
+            position: 'relative',
+            overflow: 'hidden',
+          }}
+        >
+          {/* Soccer field pattern */}
+          <Box
             style={{
-              background: 'linear-gradient(135deg, var(--mantine-color-yellow-6) 0%, var(--mantine-color-teal-3) 100%)',
-              color: 'white',
-              position: 'relative',
-              overflow: 'hidden',
+              position: 'absolute',
+              top: 0,
+              right: 0,
+              width: '200px',
+              height: '100px',
+              background:
+                "url(\"data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='white' fill-opacity='0.1'%3E%3Cpath d='M20 20c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10zm10 0c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10z'/%3E%3C/g%3E%3C/svg%3E\")",
+              opacity: 0.3,
             }}
-          >
-            {/* Soccer field pattern */}
-            <Box
-              style={{
-                position: 'absolute',
-                top: 0,
-                right: 0,
-                width: '200px',
-                height: '100px',
-                background:
-                  "url(\"data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='white' fill-opacity='0.1'%3E%3Cpath d='M20 20c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10zm10 0c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10z'/%3E%3C/g%3E%3C/svg%3E\")",
-                opacity: 0.3,
-              }}
-            />
+          />
 
-            <Group align='center' gap='lg'>
-              <ThemeIcon
-                size={80}
-                radius='xl'
-                color='white'
-                variant='white'
-                style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)' }}
-              >
-                <IconBuildingStadium size={40} />
-              </ThemeIcon>
-
-              <Box>
-                <Title order={1} fw={900} mb='sm'>
-                  Create New Venue
-                </Title>
-                <Text size='lg' opacity={0.9}>
-                  Add a new venue to the database
-                </Text>
-              </Box>
-            </Group>
-          </Paper>
-
-          {/* Venue Details Section */}
-          <Card shadow='md' radius='xl' p='xl' withBorder>
-            <Group align='center' gap='sm' mb='xl'>
-              <ThemeIcon size={32} radius='xl' color='blue' variant='light'>
-                <IconInfoCircle size={18} />
-              </ThemeIcon>
-              <Title order={3} fw={700} c='gray.8'>
-                Venue Information
-              </Title>
-            </Group>
-
-            <Stack gap='lg'>
-              <TextInput label='Name' placeholder='Enter venue name' {...form.getInputProps('name')} />
-              <TextInput label='Address' placeholder='Enter venue address' {...form.getInputProps('address')} />
-              <Textarea
-                label='Address Description'
-                placeholder='Enter venue address description'
-                {...form.getInputProps('addressDescription')}
-              />
-              <Switch label='Has Parking' {...form.getInputProps('hasParking', { type: 'checkbox' })} />
-              <Switch label='Has Showers' {...form.getInputProps('hasShowers', { type: 'checkbox' })} />
-              <NumberInput
-                label='Price per Hour (AZN)'
-                placeholder='Enter price per hour'
-                {...form.getInputProps('pricePerHour')}
-              />
-              <Select
-                allowDeselect={false}
-                label='Type'
-                placeholder='Select venue type'
-                {...form.getInputProps('type')}
-                data={Object.values(VenueType.options).map((type) => ({ label: getTypeLabel(type), value: type }))}
-              />
-              <TextInput label='Contact Name' placeholder='Enter contact name' {...form.getInputProps('contactName')} />
-              <TextInput
-                label='Contact Phone'
-                placeholder='Enter contact phone'
-                {...form.getInputProps('contactPhone')}
-              />
-            </Stack>
-          </Card>
-
-          <Card shadow='md' radius='xl' p='xl' withBorder>
-            <Stack>
-              <Title order={3} fw={700} c='gray.8'>
-                Mark location on map
-              </Title>
-              <SetMap form={form} />
-            </Stack>
-          </Card>
-
-          <Paper
-            shadow='lg'
-            radius='xl'
-            p='lg'
-            style={{
-              background: 'linear-gradient(135deg, var(--mantine-color-yellow-0) 0%, var(--mantine-color-teal-0) 100%)',
-              border: `2px solid var(--mantine-color-yellow-2)`,
-            }}
-          >
-            <Button
-              // loading={mutation.isPending}
-              type='submit'
-              size='xl'
+          <Group align='center' gap='lg'>
+            <ThemeIcon
+              size={80}
               radius='xl'
-              fullWidth
-              variant='gradient'
-              gradient={{
-                from: 'yellow.6',
-                to: 'teal.3',
-              }}
-              leftSection={<IconBuildingStadium size={24} />}
-              style={{
-                height: rem(60),
-                fontSize: rem(18),
-                fontWeight: 700,
-                boxShadow: `0 8px 16px rgba(59, 130, 246, 0.3)`,
-              }}
+              color='white'
+              variant='white'
+              style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)' }}
             >
-              Create Venue
-            </Button>
-          </Paper>
-        </Stack>
-      </form>
-    </Container>
+              <IconBuildingStadium size={40} />
+            </ThemeIcon>
+
+            <Box>
+              <Title order={1} fw={900} mb='sm'>
+                Create New Venue
+              </Title>
+              <Text size='lg' opacity={0.9}>
+                Add a new venue to the database
+              </Text>
+            </Box>
+          </Group>
+        </Paper>
+
+        {/* Venue Details Section */}
+        <Card shadow='md' radius='xl' p='xl' withBorder>
+          <Group align='center' gap='sm' mb='xl'>
+            <ThemeIcon size={32} radius='xl' color='blue' variant='light'>
+              <IconInfoCircle size={18} />
+            </ThemeIcon>
+            <Title order={3} fw={700} c='gray.8'>
+              Venue Information
+            </Title>
+          </Group>
+
+          <Stack gap='lg'>
+            <TextInput label='Name' placeholder='Enter venue name' {...form.getInputProps('name')} />
+            <TextInput label='Address' placeholder='Enter venue address' {...form.getInputProps('address')} />
+            <Textarea
+              label='Address Description'
+              placeholder='Enter venue address description'
+              {...form.getInputProps('addressDescription')}
+            />
+            <Switch label='Has Parking' {...form.getInputProps('hasParking', { type: 'checkbox' })} />
+            <Switch label='Has Showers' {...form.getInputProps('hasShowers', { type: 'checkbox' })} />
+            <NumberInput
+              label='Price per Hour (AZN)'
+              placeholder='Enter price per hour'
+              {...form.getInputProps('pricePerHour')}
+            />
+            <Select
+              allowDeselect={false}
+              label='Type'
+              placeholder='Select venue type'
+              {...form.getInputProps('type')}
+              data={Object.values(VenueType.options).map((type) => ({ label: getTypeLabel(type), value: type }))}
+            />
+            <TextInput label='Contact Name' placeholder='Enter contact name' {...form.getInputProps('contactName')} />
+            <TextInput
+              label='Contact Phone'
+              placeholder='Enter contact phone'
+              {...form.getInputProps('contactPhone')}
+            />
+          </Stack>
+        </Card>
+
+        <Card shadow='md' radius='xl' p='xl' withBorder>
+          <Stack>
+            <Title order={3} fw={700} c='gray.8'>
+              Mark location on map
+            </Title>
+            <SetMap form={form} />
+          </Stack>
+        </Card>
+
+        <Paper
+          shadow='lg'
+          radius='xl'
+          p='lg'
+          style={{
+            background: 'linear-gradient(135deg, var(--mantine-color-yellow-0) 0%, var(--mantine-color-teal-0) 100%)',
+            border: `2px solid var(--mantine-color-yellow-2)`,
+          }}
+        >
+          <Button
+            // loading={mutation.isPending}
+            type='submit'
+            size='xl'
+            radius='xl'
+            fullWidth
+            variant='gradient'
+            gradient={{
+              from: 'yellow.6',
+              to: 'teal.3',
+            }}
+            leftSection={<IconBuildingStadium size={24} />}
+            style={{
+              height: rem(60),
+              fontSize: rem(18),
+              fontWeight: 700,
+              boxShadow: `0 8px 16px rgba(59, 130, 246, 0.3)`,
+            }}
+          >
+            Create Venue
+          </Button>
+        </Paper>
+      </Stack>
+    </form>
   );
 }
