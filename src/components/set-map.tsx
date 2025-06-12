@@ -1,8 +1,19 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from 'react';
 import type { UseFormReturnType } from '@mantine/form';
 import { MapContainer, type MapContainerProps, TileLayer, useMapEvents, Marker, Popup } from 'react-leaflet';
 import { Button, Group, Text, Box } from '@mantine/core';
 import { IconTrash } from '@tabler/icons-react';
+
+import L from 'leaflet';
+
+// Fix for default markers in react-leaflet
+delete (L.Icon.Default.prototype as any)._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+});
 
 interface SetMapProps extends Omit<MapContainerProps, 'center' | 'zoom'> {
   form: UseFormReturnType<any>; // eslint-disable-line @typescript-eslint/no-explicit-any
