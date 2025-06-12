@@ -54,7 +54,7 @@ export default function FixtureCard({ match }: FixtureCardProps) {
         <Box
           style={{
             position: 'absolute',
-            top: rem(-8),
+            top: rem(1),
             right: rem(20),
             background: 'linear-gradient(135deg, var(--mantine-color-orange-5) 0%, var(--mantine-color-red-5) 100%)',
             borderRadius: rem(16),
