@@ -1,75 +1,47 @@
 import { Outlet } from 'react-router-dom';
 import { Header } from '../components/header';
 import { Box, rem } from '@mantine/core';
+import { useQueryClient } from '@tanstack/react-query';
+import { notifications } from '@mantine/notifications';
+import { usePullToRefresh } from '../hooks/use-pull-to-refresh';
+import PullToRefreshIndicator from '../components/PullToRefreshIndicator';
 
 export default function HomeLayout() {
-  return (
-    <Box
-      style={{
-        minHeight: '100vh',
-        background: `
-          linear-gradient(180deg, 
-            var(--mantine-color-gray-0) 0%, 
-            var(--mantine-color-gray-1) 50%,
-            var(--mantine-color-gray-0) 100%
-          )
-        `,
-        position: 'relative',
-      }}
-    >
-      {/* Soccer Field Background Pattern */}
-      <Box
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: `
-            radial-gradient(circle at 20% 80%, var(--mantine-color-green-0) 0%, transparent 50%),
-            radial-gradient(circle at 80% 20%, var(--mantine-color-blue-0) 0%, transparent 50%),
-            url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23e5e7eb' fill-opacity='0.03'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")
-          `,
-          zIndex: -1,
-          opacity: 0.5,
-        }}
-      />
+  const queryClient = useQueryClient();
 
-      {/* Header */}
-      <Header />
+  // Handle refresh logic
+  const handleRefresh = async () => {
+    try {
+      // Invalidate all queries to refresh data
+      await queryClient.invalidateQueries();
 
-      {/* Main Content Area */}
-      <Box
-        style={{
-          position: 'relative',
-          zIndex: 1,
-          paddingTop: rem(20),
-          paddingBottom: rem(80),
-          minHeight: `calc(100vh - 80px)`, // Account for header height
-        }}
-      >
-        <Outlet />
-      </Box>
+      // Show success notification
+      notifications.show({
+        title: 'Refreshed!',
+        message: 'Data has been updated',
+        color: 'green',
+        autoClose: 2000,
+      });
+    } catch (error) {
+      console.error('Refresh failed:', error);
+      // Show error notification
+      notifications.show({
+        title: 'Refresh failed',
+        message: 'Please try again',
+        color: 'red',
+        autoClose: 3000,
+      });
+    }
+  };
 
-      {/* Footer Pattern */}
-      <Box
-        style={{
-          position: 'fixed',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: rem(4),
-          background:
-            'linear-gradient(90deg, var(--mantine-color-green-5) 0%, var(--mantine-color-teal-5) 50%, var(--mantine-color-blue-5) 100%)',
-          zIndex: 1000,
-        }}
-      />
-    </Box>
-  );
-}
+  // Use pull-to-refresh hook
+  const pullToRefresh = usePullToRefresh({
+    onRefresh: handleRefresh,
+    threshold: 80,
+    resistance: 2.5,
+    enabled: true,
+  });
 
-// Alternative Enhanced Layout (if you want more sophisticated styling)
-export function EnhancedHomeLayout() {
   return (
     <Box
       style={{
@@ -89,6 +61,8 @@ export function EnhancedHomeLayout() {
       <Box
         style={{
           position: 'fixed',
+          paddingTop: pullToRefresh.isPulling ? `${Math.min(pullToRefresh.pullDistance, 100)}px` : '0px',
+          transition: pullToRefresh.isPulling ? 'none' : 'padding-top 0.3s ease',
           top: 0,
           left: 0,
           right: 0,
@@ -102,6 +76,14 @@ export function EnhancedHomeLayout() {
           zIndex: -1,
           opacity: 0.3,
         }}
+      />
+
+      <PullToRefreshIndicator
+        isPulling={pullToRefresh.isPulling}
+        pullDistance={pullToRefresh.pullDistance}
+        isRefreshing={pullToRefresh.isRefreshing}
+        canRefresh={pullToRefresh.canRefresh}
+        threshold={80}
       />
 
       {/* Stadium Lighting Effect */}
@@ -197,6 +179,24 @@ export function EnhancedHomeLayout() {
           zIndex: 1000,
         }}
       />
+
+      {import.meta.env.NODE_ENV === 'development' && (
+        <Box
+          style={{
+            position: 'fixed',
+            bottom: rem(20),
+            left: rem(20),
+            padding: rem(8),
+            background: 'rgba(0,0,0,0.8)',
+            color: 'white',
+            fontSize: '10px',
+            borderRadius: rem(4),
+            zIndex: 9999,
+          }}
+        >
+          PWA: {pullToRefresh.isPWA ? '✅' : '❌'}
+        </Box>
+      )}
     </Box>
   );
 }

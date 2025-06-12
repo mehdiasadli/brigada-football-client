@@ -1,6 +1,6 @@
 import { Route, Routes as ReactRoutes, Navigate } from 'react-router-dom';
 import AuthLayout from './layouts/auth.layout';
-import { EnhancedHomeLayout } from './layouts/home.layout';
+import HomeLayout from './layouts/home.layout';
 import HomePage from './pages/home.page';
 import ProfilePage from './pages/profile.page';
 import LoginPage from './pages/login.page';
@@ -33,7 +33,7 @@ export default function Routes() {
 
   return (
     <ReactRoutes>
-      <Route path='/' element={token ? <EnhancedHomeLayout /> : <Navigate to='/auth' replace />}>
+      <Route path='/' element={token ? <HomeLayout /> : <Navigate to='/auth' replace />}>
         <Route index element={<HomePage />} />
         <Route path='fixture' element={<FixturePage />} />
         <Route path='results' element={<ResultsPage />} />
