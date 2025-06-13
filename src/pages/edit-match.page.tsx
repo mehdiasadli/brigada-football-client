@@ -2,7 +2,6 @@ import { useParams } from 'react-router-dom';
 import { useMatch } from '../api/matches/matches.queries';
 import ErrorComponent from '../components/error-component';
 import LoadingComponent from '../components/loading-component';
-import { Container } from '@mantine/core';
 import EditMatchForm from '../components/edit-match.form';
 
 export default function EditMatchPage() {
@@ -18,9 +17,5 @@ export default function EditMatchPage() {
     return <LoadingComponent />;
   }
 
-  return (
-    <Container size='md' py='xl'>
-      <EditMatchForm match={match} />
-    </Container>
-  );
+  return <EditMatchForm match={match} />;
 }

@@ -45,7 +45,8 @@ export default function EditTeamForm({ team, status }: EditTeamFormProps) {
 
   function onCancel() {
     form.reset();
-    navigate(`/matches/edit/${team.matchId}`);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    navigate(-1 as any, { replace: true });
   }
 
   const openDeletePlayerConfirmModal = (playerId: string, playerName: string) => {

@@ -22,4 +22,10 @@ export type GetDashboardChartsResponse = {
     usersWhichHaveCreatedMatch: number;
     usersWhichHavePlayedMatch: number;
   }[];
+  matches: {
+    month: number;
+    matchesCreatedCount: number;
+    matchesCompletedCount: number;
+    matchesPendingCount: number;
+  }[];
 };

@@ -3,13 +3,13 @@ import { LineChart } from '@mantine/charts';
 import type { GetDashboardChartsResponse } from '../../../api/dashboard/dashboard.responses';
 import { useEffect, useState } from 'react';
 import { Card, Text, Group, ThemeIcon, Stack, Box, SimpleGrid } from '@mantine/core';
-import { IconUsers, IconTrophy, IconUserPlus } from '@tabler/icons-react';
+import { IconTrophy, IconCalendarEvent, IconBallFootball } from '@tabler/icons-react';
 
 interface ChartDataPoint {
   month: string;
-  'Total Users': number;
-  'Match Creators': number;
-  'Match Players': number;
+  'Total Matches': number;
+  'Completed Matches': number;
+  'Pending Matches': number;
 }
 
 const getMonthName = (monthNumber: number): string => {
@@ -17,20 +17,20 @@ const getMonthName = (monthNumber: number): string => {
   return months[monthNumber - 1] || '';
 };
 
-interface UsersChartProps {
-  data: GetDashboardChartsResponse['users'];
+interface MatchesChartProps {
+  data: GetDashboardChartsResponse['matches'];
 }
 
-export default function UsersChart({ data }: UsersChartProps) {
+export default function MatchesChart({ data }: MatchesChartProps) {
   const [chartData, setChartData] = useState<ChartDataPoint[]>([]);
 
   useEffect(() => {
     if (data && data.length > 0) {
       const transformedData = data.map((item) => ({
         month: getMonthName(item.month),
-        'Total Users': item.usersCreatedCount,
-        'Match Creators': item.usersWhichHaveCreatedMatch,
-        'Match Players': item.usersWhichHavePlayedMatch,
+        'Total Matches': item.matchesCreatedCount,
+        'Completed Matches': item.matchesCompletedCount,
+        'Pending Matches': item.matchesPendingCount,
       }));
       setChartData(transformedData);
     }
@@ -39,12 +39,12 @@ export default function UsersChart({ data }: UsersChartProps) {
   // Calculate totals for summary cards
   const totals = data?.reduce(
     (acc, curr) => ({
-      totalUsers: acc.totalUsers + curr.usersCreatedCount,
-      matchCreators: acc.matchCreators + curr.usersWhichHaveCreatedMatch,
-      matchPlayers: acc.matchPlayers + curr.usersWhichHavePlayedMatch,
+      totalMatches: acc.totalMatches + curr.matchesCreatedCount,
+      completedMatches: acc.completedMatches + curr.matchesCompletedCount,
+      pendingMatches: acc.pendingMatches + curr.matchesPendingCount,
     }),
-    { totalUsers: 0, matchCreators: 0, matchPlayers: 0 }
-  ) || { totalUsers: 0, matchCreators: 0, matchPlayers: 0 };
+    { totalMatches: 0, completedMatches: 0, pendingMatches: 0 }
+  ) || { totalMatches: 0, completedMatches: 0, pendingMatches: 0 };
 
   return (
     <Stack gap='lg'>
@@ -55,10 +55,10 @@ export default function UsersChart({ data }: UsersChartProps) {
         <Group justify='space-between' mb='lg'>
           <Box>
             <Text size='lg' fw={600}>
-              User Registration Trends
+              Match Creation Trends
             </Text>
             <Text size='sm' c='dimmed'>
-              Monthly user creation and engagement over the last 12 months
+              Monthly match creation and engagement over the last 12 months
             </Text>
           </Box>
         </Group>
@@ -70,15 +70,15 @@ export default function UsersChart({ data }: UsersChartProps) {
             dataKey='month'
             series={[
               {
-                name: 'Total Users',
+                name: 'Total Matches',
                 color: 'blue.6',
               },
               {
-                name: 'Match Creators',
+                name: 'Completed Matches',
                 color: 'green.6',
               },
               {
-                name: 'Match Players',
+                name: 'Pending Matches',
                 color: 'orange.6',
               },
             ]}
@@ -144,14 +144,14 @@ export default function UsersChart({ data }: UsersChartProps) {
         <Card shadow='sm' padding='md' radius='md' style={{ border: '1px solid var(--mantine-color-gray-2)' }}>
           <Group gap='sm'>
             <ThemeIcon color='blue' variant='light' size='lg'>
-              <IconUsers size={20} />
+              <IconBallFootball size={20} />
             </ThemeIcon>
             <Box>
               <Text size='xl' fw={700} c='blue'>
-                {totals.totalUsers.toLocaleString()}
+                {totals.totalMatches.toLocaleString()}
               </Text>
               <Text size='sm' c='dimmed'>
-                Total Users Created
+                Total Matches Created
               </Text>
             </Box>
           </Group>
@@ -160,14 +160,14 @@ export default function UsersChart({ data }: UsersChartProps) {
         <Card shadow='sm' padding='md' radius='md' style={{ border: '1px solid var(--mantine-color-gray-2)' }}>
           <Group gap='sm'>
             <ThemeIcon color='green' variant='light' size='lg'>
-              <IconUserPlus size={20} />
+              <IconTrophy size={20} />
             </ThemeIcon>
             <Box>
               <Text size='xl' fw={700} c='green'>
-                {totals.matchCreators.toLocaleString()}
+                {totals.completedMatches.toLocaleString()}
               </Text>
               <Text size='sm' c='dimmed'>
-                Active Match Creators
+                Completed Matches
               </Text>
             </Box>
           </Group>
@@ -176,14 +176,14 @@ export default function UsersChart({ data }: UsersChartProps) {
         <Card shadow='sm' padding='md' radius='md' style={{ border: '1px solid var(--mantine-color-gray-2)' }}>
           <Group gap='sm'>
             <ThemeIcon color='orange' variant='light' size='lg'>
-              <IconTrophy size={20} />
+              <IconCalendarEvent size={20} />
             </ThemeIcon>
             <Box>
               <Text size='xl' fw={700} c='orange'>
-                {totals.matchPlayers.toLocaleString()}
+                {totals.pendingMatches.toLocaleString()}
               </Text>
               <Text size='sm' c='dimmed'>
-                Active Match Players
+                Pending Matches
               </Text>
             </Box>
           </Group>

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
+  ActionIcon,
   Combobox,
   TextInput,
   useCombobox,
@@ -8,9 +9,10 @@ import {
   type TextInputProps,
 } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import type { UseFormReturnType } from '@mantine/form';
 import { useSearchForMatch } from '../../api/users/users.queries';
+import { IconTrash } from '@tabler/icons-react';
 
 interface PlayerInputProps {
   form: UseFormReturnType<any>;
@@ -36,6 +38,7 @@ export default function PlayerInput({
   playerIds = [],
 }: PlayerInputProps) {
   const justSelectedFromDropdown = useRef(false);
+  const lastUserSelection = useRef<string | null>(null);
 
   // Get the current player name for debounced search
   const getNestedValue = (obj: any, path: string) => {
@@ -44,9 +47,9 @@ export default function PlayerInput({
 
   const currentPlayer = getNestedValue(form.getValues(), field);
   const currentPlayerName = currentPlayer?.name || '';
+
   const [debouncedQuery] = useDebouncedValue(currentPlayerName, 300);
 
-  // TODO: exclude already seleced players for the match
   const { data, isLoading } = useSearchForMatch(debouncedQuery, playerIds);
 
   const combobox = useCombobox({
@@ -54,6 +57,17 @@ export default function PlayerInput({
   });
 
   const users = data?.data ?? [];
+
+  // Reset the flag after a short delay to prevent issues with rapid interactions
+  useEffect(() => {
+    if (justSelectedFromDropdown.current) {
+      const timer = setTimeout(() => {
+        justSelectedFromDropdown.current = false;
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [justSelectedFromDropdown.current]);
 
   const options = users.map((user) => (
     <Combobox.Option key={user.id} value={user.id}>
@@ -64,21 +78,25 @@ export default function PlayerInput({
     </Combobox.Option>
   ));
 
-  const handleOptionSubmit = (userId: string) => {
+  const handleOptionSubmit = (userId?: string | null) => {
+    if (!userId) {
+      // Clear both name and userId
+      form.setFieldValue(`${field}.name`, '');
+      form.setFieldValue(`${field}.userId`, null);
+      lastUserSelection.current = null;
+      return;
+    }
+
     const selectedUser = users.find((user) => user.id === userId);
 
     if (selectedUser) {
       // Set flag to prevent clearing userId in onChange
       justSelectedFromDropdown.current = true;
+      lastUserSelection.current = userId;
 
       const fullName = `${selectedUser.firstName} ${selectedUser.lastName}`;
 
-      // Method 1: Try setting both values in sequence
-      form.setFieldValue(`${field}.name`, fullName);
-
-      form.setFieldValue(`${field}.userId`, userId);
-
-      // Method 2: Also try batch update as backup
+      // Use single batch update to avoid race conditions
       form.setValues((current) => {
         const updated = { ...current };
         const pathParts = field.split('.');
@@ -98,6 +116,7 @@ export default function PlayerInput({
           target[finalKey] = {};
         }
 
+        // Update both fields atomically
         target[finalKey] = {
           ...target[finalKey],
           name: fullName,
@@ -107,27 +126,76 @@ export default function PlayerInput({
         return updated;
       });
     }
+
     combobox.closeDropdown();
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.currentTarget.value;
 
-    // Update the name
-    form.setFieldValue(`${field}.name`, newValue);
+    // Check if user manually edited the name after selecting a user
+    const wasUserSelected = lastUserSelection.current !== null;
+    const isManualEdit = !justSelectedFromDropdown.current;
 
-    // Only clear userId if NOT just selected from dropdown
-    if (!justSelectedFromDropdown.current) {
-      form.setFieldValue(`${field}.userId`, null);
+    if (isManualEdit && wasUserSelected) {
+      // User is manually editing after selecting a user - clear the userId
+      form.setValues((current) => {
+        const updated = { ...current };
+        const pathParts = field.split('.');
+
+        let target = updated;
+        for (let i = 0; i < pathParts.length - 1; i++) {
+          if (!target[pathParts[i]]) {
+            target[pathParts[i]] = {};
+          }
+          target = target[pathParts[i]];
+        }
+
+        const finalKey = pathParts[pathParts.length - 1];
+        if (!target[finalKey]) {
+          target[finalKey] = {};
+        }
+
+        target[finalKey] = {
+          ...target[finalKey],
+          name: newValue,
+          userId: null, // Clear userId when manually editing
+        };
+
+        return updated;
+      });
+
+      lastUserSelection.current = null;
+    } else if (isManualEdit) {
+      // Regular manual input - just update name
+      form.setFieldValue(`${field}.name`, newValue);
+    }
+
+    // Reset the dropdown selection flag after processing
+    if (justSelectedFromDropdown.current) {
+      setTimeout(() => {
+        justSelectedFromDropdown.current = false;
+      }, 50);
     }
   };
 
   const handleInputBlur = () => {
     combobox.closeDropdown();
+
+    // Final cleanup of flags
+    setTimeout(() => {
+      justSelectedFromDropdown.current = false;
+    }, 100);
   };
 
   const handleInputFocus = () => {
     combobox.openDropdown();
+  };
+
+  const handleRemoveUser = () => {
+    form.setFieldValue(`${field}.name`, '');
+    form.setFieldValue(`${field}.userId`, null);
+    lastUserSelection.current = null;
   };
 
   return (
@@ -137,12 +205,20 @@ export default function PlayerInput({
           label={label}
           placeholder={placeholder}
           required={required}
-          {...form.getInputProps(`${field}.name`)}
+          value={currentPlayerName}
           onClick={() => combobox.openDropdown()}
           onFocus={handleInputFocus}
           onBlur={handleInputBlur}
           onChange={handleInputChange}
-          rightSection={isLoading ? <span>...</span> : null}
+          rightSection={
+            isLoading ? (
+              <span>...</span>
+            ) : currentPlayer?.userId ? (
+              <ActionIcon onClick={handleRemoveUser} variant='subtle' color='red'>
+                <IconTrash size={15} />
+              </ActionIcon>
+            ) : null
+          }
           {...targetProps}
         />
       </Combobox.Target>
