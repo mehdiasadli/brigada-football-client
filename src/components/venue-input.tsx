@@ -1,7 +1,7 @@
-import { Button, Combobox, Text, TextInput, useCombobox, type ComboboxProps } from '@mantine/core';
+import { Button, Combobox, Loader, rem, Text, TextInput, useCombobox, type ComboboxProps } from '@mantine/core';
 import { Box, Group, ThemeIcon } from '@mantine/core';
 import type { UseFormReturnType } from '@mantine/form';
-import { IconBuildingStadium, IconMapPin } from '@tabler/icons-react';
+import { IconBuildingStadium, IconMapPin, IconSearch } from '@tabler/icons-react';
 import { useSearchVenues } from '../api/venues/venues.queries';
 import { useDebouncedValue } from '@mantine/hooks';
 import { modals } from '@mantine/modals';
@@ -92,7 +92,41 @@ export function VenueInput({ form, field = 'venueId', nameField = 'venueName', c
               onFocus={handleInputFocus}
               onBlur={handleInputBlur}
               onChange={handleInputChange}
-              rightSection={isLoading ? <span>...</span> : null}
+              rightSection={isLoading ? <Loader type='dots' size='xs' /> : null}
+              leftSection={<IconSearch size={16} />}
+              styles={{
+                input: {
+                  borderRadius: rem(12),
+                  border: '2px solid var(--mantine-color-green-7)',
+                  backgroundColor: 'white',
+                  fontSize: rem(14),
+                  fontWeight: 500,
+                  paddingLeft: rem(45),
+                  paddingRight: rem(35),
+                  '&:focus': {
+                    borderColor: 'var(--mantine-color-green-9)',
+                    boxShadow: '0 0 0 2px var(--mantine-color-green-2)',
+                    transform: 'translateY(-1px)',
+                  },
+                  transition: 'all 0.2s ease',
+                },
+                description: {
+                  fontSize: rem(12),
+                  color: 'var(--mantine-color-gray-6)',
+                  marginTop: rem(4),
+                },
+                controls: {
+                  borderColor: 'transparent',
+                },
+                control: {
+                  backgroundColor: 'var(--mantine-color-orange-1)',
+                  borderColor: 'transparent',
+                  color: 'var(--mantine-color-orange-7)',
+                  '&:hover': {
+                    backgroundColor: 'var(--mantine-color-orange-2)',
+                  },
+                },
+              }}
             />
           </Combobox.Target>
 

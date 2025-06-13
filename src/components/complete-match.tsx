@@ -3,7 +3,7 @@ import type { FindOneMatchResponse } from '../api/matches/matches.responses';
 import { completeMatchSchema, type CompleteMatchSchema } from '../schemas/matches.schema';
 import { useCompleteMatch } from '../api/matches/matches.mutations';
 import { zodResolver } from 'mantine-form-zod-resolver';
-import { Box, Button, Group, Paper, rem, Stack, Text, ThemeIcon, Title } from '@mantine/core';
+import { Box, Button, Flex, Group, Paper, rem, Stack, Text, ThemeIcon, Title } from '@mantine/core';
 import { IconBallFootball, IconTrophy } from '@tabler/icons-react';
 import DurationInput from './match-inputs/duration.input';
 import WeatherConditionInput from './match-inputs/weather-condition';
@@ -145,11 +145,22 @@ export default function CompleteMatch({ match }: CompleteMatchProps) {
                     </Group>
 
                     {/* Player Stats */}
-                    <Stack>
+                    <Flex
+                      gap='md'
+                      sx={(_, u) => ({
+                        [u.smallerThan('sm')]: {
+                          flexDirection: 'column',
+                        },
+                      })}
+                    >
                       <GoalsInput form={form} field={`teams.${teamIndex}.players.${playerIndex}.goals`} />
                       <AssistsInput form={form} field={`teams.${teamIndex}.players.${playerIndex}.assists`} />
-                      <RatingInput form={form} field={`teams.${teamIndex}.players.${playerIndex}.rating`} />
-                    </Stack>
+                      <RatingInput
+                        containerProps={{ flex: 1 }}
+                        form={form}
+                        field={`teams.${teamIndex}.players.${playerIndex}.rating`}
+                      />
+                    </Flex>
                   </Stack>
                 </Paper>
               ))}
