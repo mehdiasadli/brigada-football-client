@@ -13,7 +13,7 @@ export default function HomeLayout() {
   const handleRefresh = async () => {
     try {
       // Invalidate all queries to refresh data
-      await queryClient.invalidateQueries();
+      await queryClient.refetchQueries();
 
       // Show success notification
       notifications.show({
