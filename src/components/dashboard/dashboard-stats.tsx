@@ -1,7 +1,7 @@
 import { Card, Group, Progress, SimpleGrid, ThemeIcon } from '@mantine/core';
 import { useDashboardStats } from '../../api/dashboard/dashboard.queries';
 import { Text } from '@mantine/core';
-import { IconCalendar, IconMapPin, IconTrendingUp, IconUsers } from '@tabler/icons-react';
+import { IconBallFootball, IconMapPin, IconTrendingUp, IconUsers } from '@tabler/icons-react';
 import ErrorComponent from '../error-component';
 import LoadingComponent from '../loading-component';
 
@@ -81,7 +81,7 @@ export function DashboardStats() {
             Total Matches
           </Text>
           <ThemeIcon color='orange' variant='light' size='sm'>
-            <IconCalendar size={16} />
+            <IconBallFootball size={16} />
           </ThemeIcon>
         </Group>
         <Text size='xl' fw={700} c='orange'>
