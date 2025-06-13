@@ -8,6 +8,8 @@ export const UserRole = z.enum(['ADMIN', 'MODERATOR', 'USER', 'SUPER_ADMIN'], {
   message: 'Invalid role',
 });
 
+export type TUserRole = (typeof UserRole.options)[number];
+
 export const Gender = z.enum(['MALE', 'FEMALE', 'OTHER'], {
   required_error: 'Gender is required',
   invalid_type_error: 'Gender must be a string',

@@ -3,16 +3,25 @@ import type { FindOneMatchResponse } from '../api/matches/matches.responses';
 import { MatchStatus } from '../schemas/entities/match.entity';
 import { getTeamStats } from '../utils/team-utils';
 import { getWeatherCondition } from '../resources/weather-map';
-import { IconMapPin, IconClock, IconCalendar, IconBallFootball, IconTrophy, IconVs } from '@tabler/icons-react';
+import {
+  IconMapPin,
+  IconClock,
+  IconCalendar,
+  IconBallFootball,
+  IconTrophy,
+  IconVs,
+  IconBuildingStadium,
+} from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import { VenueMapModal } from './venue-map-modal';
 import { modals } from '@mantine/modals';
 
 interface MatchHeaderProps {
   match: FindOneMatchResponse;
+  asPost?: boolean;
 }
 
-export default function MatchHeader({ match }: MatchHeaderProps) {
+export default function MatchHeader({ match, asPost = false }: MatchHeaderProps) {
   const status = match.status;
   const isCompleted = status === MatchStatus.enum.COMPLETED;
 
@@ -173,6 +182,18 @@ export default function MatchHeader({ match }: MatchHeaderProps) {
                 )}
               </Stack>
             </Flex>
+
+            {asPost && (
+              <Badge
+                variant='white'
+                mt={10}
+                leftSection={<IconBuildingStadium size={16} />}
+                color={'green'}
+                onClick={openVenueMapModal}
+              >
+                VENUE: {match.venueName}
+              </Badge>
+            )}
           </Stack>
         ) : (
           // Upcoming Match - Show VS
@@ -188,15 +209,13 @@ export default function MatchHeader({ match }: MatchHeaderProps) {
                 <IconBallFootball size={20} />
               </ThemeIcon>
               <Text size='lg' fw={600} opacity={0.9} tt='uppercase'>
-                Upcoming Fixture
+                Upcoming
               </Text>
             </Group>
-
             <Group justify='center' align='center' gap='xl' w='100%' maw={600}>
               <Text size='xl' fw={800} ta='center' style={{ flex: 1 }}>
                 {homeTeam.name || 'Team 1'}
               </Text>
-
               <Box
                 style={{
                   backgroundColor: 'rgba(255, 255, 255, 0.2)',
@@ -210,85 +229,30 @@ export default function MatchHeader({ match }: MatchHeaderProps) {
               >
                 <IconVs size={24} />
               </Box>
-
               <Text size='xl' fw={800} ta='center' style={{ flex: 1 }}>
                 {awayTeam.name || 'Team 2'}
               </Text>
             </Group>
+
+            {asPost && (
+              <Badge
+                variant='white'
+                mt={10}
+                leftSection={<IconBuildingStadium size={16} />}
+                color={'blue'}
+                onClick={openVenueMapModal}
+              >
+                VENUE: {match.venueName}
+              </Badge>
+            )}
           </Stack>
         )}
       </Paper>
 
       {/* Match Details */}
-      <Group justify='center' gap='lg' wrap='wrap'>
-        {/* Date & Time Card */}
-        <Paper
-          shadow='md'
-          radius='xl'
-          p='lg'
-          withBorder
-          style={{
-            backgroundColor: 'white',
-            border: '2px solid var(--mantine-color-blue-2)',
-            minWidth: rem(200),
-          }}
-        >
-          <Stack gap='md' align='center'>
-            <Group align='center' gap='sm'>
-              <ThemeIcon size={24} radius='xl' color='blue' variant='light'>
-                <IconCalendar size={14} />
-              </ThemeIcon>
-              <Text size='sm' fw={700} c='blue.7' tt='uppercase'>
-                Match Date
-              </Text>
-            </Group>
-
-            <Stack gap={4} align='center'>
-              <Text size='lg' fw={700} c='gray.8'>
-                {dayjs(match.startTime).format('MMM D, YYYY')}
-              </Text>
-              <Text size='sm' c='gray.6'>
-                {dayjs(match.startTime).fromNow()}
-              </Text>
-            </Stack>
-          </Stack>
-        </Paper>
-
-        {/* Time & Duration Card */}
-        <Paper
-          shadow='md'
-          radius='xl'
-          p='lg'
-          withBorder
-          style={{
-            backgroundColor: 'white',
-            border: '2px solid var(--mantine-color-indigo-2)',
-            minWidth: rem(200),
-          }}
-        >
-          <Stack gap='md' align='center'>
-            <Group align='center' gap='sm'>
-              <ThemeIcon size={24} radius='xl' color='indigo' variant='light'>
-                <IconClock size={14} />
-              </ThemeIcon>
-              <Text size='sm' fw={700} c='indigo.7' tt='uppercase'>
-                {isCompleted ? 'Match Time' : 'Kick-off'}
-              </Text>
-            </Group>
-
-            <Stack gap={4} align='center'>
-              <Text size='lg' fw={700} c='gray.8'>
-                {dayjs(match.startTime).format('h:mm A')}
-              </Text>
-              <Text size='sm' c='gray.6'>
-                {match.duration || 90} minutes
-              </Text>
-            </Stack>
-          </Stack>
-        </Paper>
-
-        {/* Venue Card */}
-        {match.venueName && (
+      {!asPost && (
+        <Group justify='center' gap='lg' wrap='wrap'>
+          {/* Date & Time Card */}
           <Paper
             shadow='md'
             radius='xl'
@@ -296,66 +260,134 @@ export default function MatchHeader({ match }: MatchHeaderProps) {
             withBorder
             style={{
               backgroundColor: 'white',
-              border: '2px solid var(--mantine-color-orange-2)',
+              border: '2px solid var(--mantine-color-blue-2)',
               minWidth: rem(200),
             }}
           >
             <Stack gap='md' align='center'>
               <Group align='center' gap='sm'>
-                <ThemeIcon size={24} radius='xl' color='orange' variant='light'>
-                  <IconMapPin size={14} />
+                <ThemeIcon size={24} radius='xl' color='blue' variant='light'>
+                  <IconCalendar size={14} />
                 </ThemeIcon>
-                <Text size='sm' fw={700} c='orange.7' tt='uppercase'>
-                  Venue
+                <Text size='sm' fw={700} c='blue.7' tt='uppercase'>
+                  Match Date
                 </Text>
               </Group>
 
-              {!match.venue ? (
+              <Stack gap={4} align='center'>
+                <Text size='lg' fw={700} c='gray.8'>
+                  {dayjs(match.startTime).format('MMM D, YYYY')}
+                </Text>
+                <Text size='sm' c='gray.6'>
+                  {dayjs(match.startTime).fromNow()}
+                </Text>
+              </Stack>
+            </Stack>
+          </Paper>
+
+          {/* Time & Duration Card */}
+          <Paper
+            shadow='md'
+            radius='xl'
+            p='lg'
+            withBorder
+            style={{
+              backgroundColor: 'white',
+              border: '2px solid var(--mantine-color-indigo-2)',
+              minWidth: rem(200),
+            }}
+          >
+            <Stack gap='md' align='center'>
+              <Group align='center' gap='sm'>
+                <ThemeIcon size={24} radius='xl' color='indigo' variant='light'>
+                  <IconClock size={14} />
+                </ThemeIcon>
+                <Text size='sm' fw={700} c='indigo.7' tt='uppercase'>
+                  {isCompleted ? 'Match Time' : 'Kick-off'}
+                </Text>
+              </Group>
+
+              <Stack gap={4} align='center'>
+                <Text size='lg' fw={700} c='gray.8'>
+                  {dayjs(match.startTime).format('h:mm A')}
+                </Text>
+                <Text size='sm' c='gray.6'>
+                  {match.duration || 90} minutes
+                </Text>
+              </Stack>
+            </Stack>
+          </Paper>
+
+          {/* Venue Card */}
+          {match.venueName && (
+            <Paper
+              shadow='md'
+              radius='xl'
+              p='lg'
+              withBorder
+              style={{
+                backgroundColor: 'white',
+                border: '2px solid var(--mantine-color-orange-2)',
+                minWidth: rem(200),
+              }}
+            >
+              <Stack gap='md' align='center'>
+                <Group align='center' gap='sm'>
+                  <ThemeIcon size={24} radius='xl' color='orange' variant='light'>
+                    <IconMapPin size={14} />
+                  </ThemeIcon>
+                  <Text size='sm' fw={700} c='orange.7' tt='uppercase'>
+                    Venue
+                  </Text>
+                </Group>
+
+                {!match.venue ? (
+                  <Text size='lg' fw={700} c='gray.8' ta='center'>
+                    {match.venueName}
+                  </Text>
+                ) : (
+                  <Anchor size='lg' onClick={openVenueMapModal}>
+                    {match.venue.name}
+                  </Anchor>
+                )}
+              </Stack>
+            </Paper>
+          )}
+
+          {/* Weather Card */}
+          {match.weatherCondition && (
+            <Paper
+              shadow='md'
+              radius='xl'
+              p='lg'
+              withBorder
+              style={{
+                backgroundColor: 'white',
+                border: `2px solid var(--mantine-color-${weatherCondition.color}-2)`,
+                minWidth: rem(200),
+              }}
+            >
+              <Stack gap='md' align='center'>
+                <Group align='center' gap='sm'>
+                  <ThemeIcon size={24} radius='xl' color={weatherCondition.color} variant='light'>
+                    <weatherCondition.icon size={14} />
+                  </ThemeIcon>
+                  <Text size='sm' fw={700} c={`${weatherCondition.color}.7`} tt='uppercase'>
+                    Weather
+                  </Text>
+                </Group>
+
                 <Text size='lg' fw={700} c='gray.8' ta='center'>
-                  {match.venueName}
+                  {weatherCondition.label}
                 </Text>
-              ) : (
-                <Anchor size='lg' onClick={openVenueMapModal}>
-                  {match.venue.name}
-                </Anchor>
-              )}
-            </Stack>
-          </Paper>
-        )}
-
-        {/* Weather Card */}
-        {match.weatherCondition && (
-          <Paper
-            shadow='md'
-            radius='xl'
-            p='lg'
-            withBorder
-            style={{
-              backgroundColor: 'white',
-              border: `2px solid var(--mantine-color-${weatherCondition.color}-2)`,
-              minWidth: rem(200),
-            }}
-          >
-            <Stack gap='md' align='center'>
-              <Group align='center' gap='sm'>
-                <ThemeIcon size={24} radius='xl' color={weatherCondition.color} variant='light'>
-                  <weatherCondition.icon size={14} />
-                </ThemeIcon>
-                <Text size='sm' fw={700} c={`${weatherCondition.color}.7`} tt='uppercase'>
-                  Weather
-                </Text>
-              </Group>
-
-              <Text size='lg' fw={700} c='gray.8' ta='center'>
-                {weatherCondition.label}
-              </Text>
-            </Stack>
-          </Paper>
-        )}
-      </Group>
+              </Stack>
+            </Paper>
+          )}
+        </Group>
+      )}
 
       {/* Match Description */}
-      {match.description && (
+      {match.description && !asPost && (
         <Paper
           shadow='sm'
           radius='lg'
