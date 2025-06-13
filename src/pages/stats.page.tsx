@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useLeaderboard } from '../api/stats/stats.queries';
 import type { LeaderboardResponse } from '../api/stats/stats.responses';
 import ErrorComponent from '../components/error-component';
@@ -27,10 +28,31 @@ import {
   IconBallFootball,
   IconCrown,
 } from '@tabler/icons-react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
+
+const validQueryParams = ['goals', 'assists', 'rating', 'activity'];
 
 export default function StatsPage() {
   const { data: leaderboard, status: leaderboardStatus, error: leaderboardError } = useLeaderboard();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    const tab = searchParams.get('tab');
+
+    if (!tab) {
+      setSearchParams((params) => {
+        params.set('tab', 'goals');
+        return params;
+      });
+    } else {
+      if (!validQueryParams.includes(tab)) {
+        setSearchParams((params) => {
+          params.set('tab', 'goals');
+          return params;
+        });
+      }
+    }
+  }, [searchParams, setSearchParams]);
 
   if (leaderboardStatus === 'pending') {
     return <LoadingComponent />;
@@ -53,6 +75,13 @@ export default function StatsPage() {
       default:
         return null;
     }
+  };
+
+  const onTabChange = (value: string) => {
+    setSearchParams((params) => {
+      params.set('tab', value);
+      return params;
+    });
   };
 
   // Render Goals Leaderboard
@@ -533,16 +562,36 @@ export default function StatsPage() {
           mb='xl'
           style={{ backgroundColor: 'var(--mantine-color-gray-0)', padding: rem(8), borderRadius: rem(16) }}
         >
-          <Tabs.Tab value='goals' leftSection={<IconTarget size={16} />} style={{ fontWeight: 600 }}>
+          <Tabs.Tab
+            value='goals'
+            onClick={() => onTabChange('goals')}
+            leftSection={<IconTarget size={16} />}
+            style={{ fontWeight: 600 }}
+          >
             Goal Scorers
           </Tabs.Tab>
-          <Tabs.Tab value='assists' leftSection={<IconHandGrab size={16} />} style={{ fontWeight: 600 }}>
+          <Tabs.Tab
+            value='assists'
+            onClick={() => onTabChange('assists')}
+            leftSection={<IconHandGrab size={16} />}
+            style={{ fontWeight: 600 }}
+          >
             Assist Providers
           </Tabs.Tab>
-          <Tabs.Tab value='rating' leftSection={<IconStar size={16} />} style={{ fontWeight: 600 }}>
+          <Tabs.Tab
+            value='rating'
+            onClick={() => onTabChange('rating')}
+            leftSection={<IconStar size={16} />}
+            style={{ fontWeight: 600 }}
+          >
             Top Rated
           </Tabs.Tab>
-          <Tabs.Tab value='activity' leftSection={<IconUsers size={16} />} style={{ fontWeight: 600 }}>
+          <Tabs.Tab
+            value='activity'
+            onClick={() => onTabChange('activity')}
+            leftSection={<IconUsers size={16} />}
+            style={{ fontWeight: 600 }}
+          >
             Most Active
           </Tabs.Tab>
         </Tabs.List>
