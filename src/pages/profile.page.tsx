@@ -4,39 +4,32 @@ import { useProfile } from '../api/users/users.queries';
 import { useUserStats } from '../api/stats/stats.queries';
 import LoadingComponent from '../components/loading-component';
 import ErrorComponent from '../components/error-component';
-import {
-  Stack,
-  Container,
-  Paper,
-  Avatar,
-  Text,
-  Group,
-  Badge,
-  ThemeIcon,
-  SimpleGrid,
-  Box,
-  rem,
-  Title,
-} from '@mantine/core';
+import { Stack, Container, Paper, Text, Group, Badge, ThemeIcon, SimpleGrid, Title } from '@mantine/core';
 import {
   IconBallFootball,
   IconTarget,
   IconHandGrab,
   IconTrophy,
   IconCalendar,
-  IconMapPin,
-  IconCrown,
   IconStars,
   IconUsers,
   IconChartBar,
   IconAward,
+  IconMessage,
 } from '@tabler/icons-react';
 import dayjs from 'dayjs';
+import InfiniteList from '../components/infinite-list';
+import { usePostsOfUser } from '../api/posts/posts.queries';
+import FeedPostCard from '../components/feed-post-card';
+import { useUserStore } from '../stores/user.store';
+import ProfileHeader from '../components/profile-header';
 
 export default function ProfilePage() {
   const { username } = useParams();
   const { data: profile, status: profileStatus, error: profileError } = useProfile(username);
   const { data: userStats, status: userStatsStatus } = useUserStats(profile?.data?.id);
+  const currentUser = useUserStore((state) => state.user)!;
+  const posts = usePostsOfUser(username ?? currentUser.username);
 
   if (profileStatus === 'pending') {
     return <LoadingComponent />;
@@ -48,28 +41,6 @@ export default function ProfilePage() {
 
   const user = profile.data;
   const stats = userStats?.data;
-
-  const getRoleColor = (role: string) => {
-    switch (role) {
-      case 'SUPER_ADMIN':
-        return 'red';
-      case 'ADMIN':
-        return 'orange';
-      default:
-        return 'blue';
-    }
-  };
-
-  const getRoleLabel = (role: string) => {
-    switch (role) {
-      case 'SUPER_ADMIN':
-        return 'Super Admin';
-      case 'ADMIN':
-        return 'Admin';
-      default:
-        return 'Player';
-    }
-  };
 
   const getPerformanceLevel = (rating: number) => {
     if (rating >= 9) return { label: 'World Class', color: 'red' };
@@ -84,121 +55,7 @@ export default function ProfilePage() {
     <Container size='lg' py='xl'>
       <Stack gap='xl'>
         {/* Profile Header */}
-        <Paper
-          shadow='xl'
-          radius='xl'
-          p='lg'
-          style={{
-            background: 'linear-gradient(135deg, var(--mantine-color-blue-6) 0%, var(--mantine-color-indigo-6) 100%)',
-            color: 'white',
-            position: 'relative',
-            overflow: 'hidden',
-          }}
-        >
-          {/* Background Pattern */}
-          <Box
-            style={{
-              position: 'absolute',
-              top: 0,
-              right: 0,
-              width: '300px',
-              height: '150px',
-              background:
-                "url(\"data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='white' fill-opacity='0.1'%3E%3Ccircle cx='20' cy='20' r='3'/%3E%3Cpath d='M20 0v40M0 20h40'/%3E%3C/g%3E%3C/svg%3E\")",
-              opacity: 0.3,
-            }}
-          />
-
-          <Group align='center' gap='xl'>
-            {/* Avatar */}
-            <Box style={{ position: 'relative' }}>
-              <Avatar
-                src={user.avatar}
-                size={120}
-                radius='xl'
-                style={{
-                  border: '4px solid rgba(255, 255, 255, 0.3)',
-                }}
-              >
-                <Text size='xl' fw={700}>
-                  {user.firstName[0]}
-                  {user.lastName[0]}
-                </Text>
-              </Avatar>
-
-              {/* Role Badge */}
-              {user.role !== 'USER' && (
-                <ThemeIcon
-                  size={32}
-                  radius='xl'
-                  color={getRoleColor(user.role)}
-                  variant='filled'
-                  style={{
-                    position: 'absolute',
-                    bottom: rem(8),
-                    right: rem(8),
-                    border: '2px solid white',
-                  }}
-                >
-                  <IconCrown size={16} />
-                </ThemeIcon>
-              )}
-            </Box>
-
-            {/* User Info */}
-            <Stack gap='sm' style={{ flex: 1 }}>
-              <Group align='center' gap='md'>
-                <Title order={2} fw={900}>
-                  {user.firstName} {user.lastName}
-                </Title>
-                <Badge
-                  variant='white'
-                  color={getRoleColor(user.role)}
-                  size='lg'
-                  leftSection={user.role !== 'USER' ? <IconCrown size={12} /> : <IconUsers size={12} />}
-                >
-                  {getRoleLabel(user.role)}
-                </Badge>
-              </Group>
-
-              <Text size='lg' opacity={0.9} fw={500}>
-                @{user.username}
-              </Text>
-
-              <Group gap='lg'>
-                <Group gap='xs'>
-                  <ThemeIcon
-                    size={20}
-                    radius='xl'
-                    color='white'
-                    variant='white'
-                    style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)' }}
-                  >
-                    <IconMapPin size={12} />
-                  </ThemeIcon>
-                  <Text size='sm' opacity={0.9}>
-                    {user.placeOfBirth}
-                  </Text>
-                </Group>
-
-                <Group gap='xs'>
-                  <ThemeIcon
-                    size={20}
-                    radius='xl'
-                    color='white'
-                    variant='white'
-                    style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)' }}
-                  >
-                    <IconCalendar size={12} />
-                  </ThemeIcon>
-                  <Text size='sm' opacity={0.9}>
-                    Joined {dayjs(user.createdAt).format('MMMM YYYY')}
-                  </Text>
-                </Group>
-              </Group>
-            </Stack>
-          </Group>
-        </Paper>
+        <ProfileHeader user={user} />
 
         {/* Statistics Section */}
         {userStatsStatus === 'pending' ? (
@@ -445,6 +302,30 @@ export default function ProfilePage() {
               </Stack>
             </Paper>
           </SimpleGrid>
+        </Stack>
+
+        <Stack gap='lg'>
+          <Group align='center' gap='sm'>
+            <ThemeIcon size={32} radius='xl' color='blue' variant='light'>
+              <IconMessage size={18} />
+            </ThemeIcon>
+            <Title order={3} fw={700} c='gray.8'>
+              Posts
+            </Title>
+          </Group>
+
+          <InfiniteList
+            result={posts}
+            render={(post) => <FeedPostCard post={post} />}
+            cols={{
+              base: 1,
+              xs: 1,
+              sm: 2,
+              md: 2,
+              lg: 2,
+              xl: 2,
+            }}
+          />
         </Stack>
       </Stack>
     </Container>

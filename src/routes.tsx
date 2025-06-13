@@ -26,6 +26,8 @@ import { DashboardPage } from './pages/dashboard.page';
 import { DashboardVenuesPage } from './pages/dashboard-venues.page';
 import AddVenuePage from './pages/add-venue.page';
 import DashboardUsersPage from './pages/dashboard-users.page';
+import CreatePostPage from './pages/create-post.page';
+import PostPage from './pages/post.page';
 
 export default function Routes() {
   const { token } = useTokenStore();
@@ -45,6 +47,8 @@ export default function Routes() {
         <Route path='matches/complete/:matchId' element={<CompleteMatchPage />} />
         <Route path='teams/edit/:teamId' element={<EditTeamPage />} />
         <Route path='users/:username?' element={<ProfilePage />} />
+        <Route path='posts/create' element={<CreatePostPage />} />
+        <Route path='posts/c/:postId' element={<PostPage />} />
         <Route
           path='dashboard'
           element={

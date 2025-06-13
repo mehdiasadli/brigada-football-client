@@ -22,3 +22,11 @@ export type FeedPostResponse = PostSchema & {
   attachements: unknown[];
 };
 export type GetFeedResponse = FeedMatchResponse | FeedPostResponse;
+
+export function isMatch(item: GetFeedResponse): item is FeedMatchResponse {
+  return 'creatorId' in item;
+}
+
+export function isPost(item: GetFeedResponse): item is FeedPostResponse {
+  return 'authorId' in item;
+}

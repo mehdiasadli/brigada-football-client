@@ -6,6 +6,7 @@ import LoadingComponent from '../loading-component';
 import { useEffect, useState } from 'react';
 import UsersChart from './charts/users-chart';
 import MatchesChart from './charts/matches-chart';
+import PostsChart from './charts/posts-chart';
 
 export default function DashboardCharts() {
   const { data: charts, error: chartsError } = useDashboardCharts();
@@ -36,6 +37,7 @@ export default function DashboardCharts() {
             <Tabs.List>
               <Tabs.Tab value='users'>Users</Tabs.Tab>
               <Tabs.Tab value='matches'>Matches</Tabs.Tab>
+              <Tabs.Tab value='posts'>Posts</Tabs.Tab>
             </Tabs.List>
           </Group>
 
@@ -45,6 +47,10 @@ export default function DashboardCharts() {
 
           <Tabs.Panel value='matches'>
             <MatchesChart data={charts.data.matches} />
+          </Tabs.Panel>
+
+          <Tabs.Panel value='posts'>
+            <PostsChart data={charts.data.posts} />
           </Tabs.Panel>
         </Stack>
       </Tabs>

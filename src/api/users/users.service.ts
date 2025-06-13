@@ -4,6 +4,7 @@ import type { PaginationSchema } from '../../schemas/query.schema';
 import type { OrderSchema } from '../../schemas/query.schema';
 import type { SearchSchema } from '../../schemas/query.schema';
 import { Api } from '../define-api';
+import type { GetProfileResponse } from './users.responses';
 
 const api = Api.create('/users');
 
@@ -13,8 +14,7 @@ export const usersService = {
       params: { ...pagination, ...order, ...search },
     }),
   findOne: async (id: string) => await api.get<UserSchema>(`/${id}`),
-  findOneWithUsername: async (username: string) =>
-    await api.get<UserSchema & { emailVerified: boolean }>(`/with-username/${username}`),
+  findOneWithUsername: async (username: string) => await api.get<GetProfileResponse>(`/with-username/${username}`),
   searchForMatch: async (query: string, excludeIds: string[] = []) =>
     await api.get<UserSchema[]>('/search/players', {
       params: { query, excludeIds },

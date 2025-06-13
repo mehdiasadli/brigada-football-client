@@ -13,6 +13,11 @@ export type GetDashboardStatsResponse = {
     completedMatchesInThisMonth: number;
     completedMatchesInLastMonth: number;
   };
+  postsStats: {
+    totalPosts: number;
+    postsInThisMonth: number;
+    postsInLastMonth: number;
+  };
 };
 
 export type GetDashboardChartsResponse = {
@@ -27,5 +32,10 @@ export type GetDashboardChartsResponse = {
     matchesCreatedCount: number;
     matchesCompletedCount: number;
     matchesPendingCount: number;
+  }[];
+  posts: {
+    month: number;
+    postsCreatedCount: number;
+    activePostsCount: number;
   }[];
 };
