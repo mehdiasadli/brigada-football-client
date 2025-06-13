@@ -7,6 +7,7 @@ import MatchHeader from './match-header';
 import { getWeatherCondition } from '../resources/weather-map';
 import FeedCardWrapper from './feed-card-wrapper';
 import { Link } from 'react-router-dom';
+import type { FindOneMatchResponse } from '../api/matches/matches.responses';
 
 interface FeedMatchCard {
   match: FeedMatchResponse;
@@ -18,7 +19,7 @@ export default function FeedMatchCard({ match }: FeedMatchCard) {
   return (
     <FeedCardWrapper author={match.creator} createdAt={match.createdAt}>
       <Box component={Link} to={`/matches/${match.id}`} style={{ textDecoration: 'none' }}>
-        <MatchHeader match={match} asPost />
+        <MatchHeader match={match as unknown as FindOneMatchResponse} asPost />
       </Box>
 
       <Group justify='space-between' align='center'>
