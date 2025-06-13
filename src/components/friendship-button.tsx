@@ -8,7 +8,6 @@ import {
   useSendFriendshipRequest,
 } from '../api/friendships/friendships.mutations';
 import type { FriendshipData } from '../api/users/users.responses';
-import { useUserStore } from '../stores/user.store';
 
 export default function FriendshipButton({
   friendship,
@@ -19,7 +18,6 @@ export default function FriendshipButton({
   username: string;
   userId: string;
 }) {
-  const currentUser = useUserStore((state) => state.user)!;
   const sendMutation = useSendFriendshipRequest(username);
   const cancelMutation = useCancelFriendshipRequest(username);
   const acceptMutation = useAcceptFriendshipRequest(username);
