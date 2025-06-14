@@ -2,7 +2,7 @@ import { Group, Paper, Container, rem, Box } from '@mantine/core';
 import HeaderUserMenu from './header-user-menu';
 import HeaderNavbar from './header-navbar';
 import HeaderSearchBar from './header-search';
-import HeaderFriends from './header-friends';
+// import HeaderFriends from './header-friends';
 
 export function Header() {
   return (

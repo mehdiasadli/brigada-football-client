@@ -78,7 +78,7 @@ export default function CreatePostPage() {
     mutation.mutate(values);
   });
 
-  const selectedVisibility = visibilityMap[form.getValues().visibility];
+  const selectedVisibility = visibilityMap[form.getValues().visibility as keyof typeof visibilityMap];
 
   return (
     <Container size='md' py='xl'>
