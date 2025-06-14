@@ -5,6 +5,8 @@ import { userKeys } from '../users/users.queries';
 import { FriendshipStatus } from '../../schemas/entities/friendship.entity';
 import type { GetProfileResponse } from '../users/users.responses';
 import type { SuccessResponse } from '../define-api';
+import { friendshipKeys } from './friendships.queries';
+import type { FriendshipRequest } from './friendships.responses';
 
 export function useSendFriendshipRequest(username: string) {
   const queryClient = useQueryClient();
@@ -53,7 +55,10 @@ export function useCancelFriendshipRequest(username: string) {
     showOnError: true,
     async onMutate(friendshipId) {
       await queryClient.cancelQueries({ queryKey: userKeys.detail(username) });
+      await queryClient.cancelQueries({ queryKey: friendshipKeys.requests() });
+
       const prevData = queryClient.getQueryData(userKeys.detail(username));
+      const prevRequests = queryClient.getQueryData(friendshipKeys.requests());
 
       queryClient.setQueryData(userKeys.detail(username), (old: SuccessResponse<GetProfileResponse>) => {
         if (!old) return old;
@@ -71,13 +76,24 @@ export function useCancelFriendshipRequest(username: string) {
         };
       });
 
-      return { prevData };
+      queryClient.setQueryData(friendshipKeys.requests(), (old: SuccessResponse<FriendshipRequest[]>) => {
+        if (!old) return old;
+
+        return {
+          ...old,
+          data: old.data.filter((request) => request.id !== friendshipId),
+        };
+      });
+
+      return { prevData, prevRequests };
     },
     onError(_, _1, ctx) {
       queryClient.setQueryData(userKeys.detail(username), ctx?.prevData);
+      queryClient.setQueryData(friendshipKeys.requests(), ctx?.prevRequests);
     },
     onSettled() {
       queryClient.invalidateQueries({ queryKey: userKeys.detail(username) });
+      queryClient.invalidateQueries({ queryKey: friendshipKeys.requests() });
     },
   });
 }
@@ -90,7 +106,10 @@ export function useRejectFriendshipRequest(username: string) {
     showOnError: true,
     async onMutate(friendshipId) {
       await queryClient.cancelQueries({ queryKey: userKeys.detail(username) });
+      await queryClient.cancelQueries({ queryKey: friendshipKeys.requests() });
+
       const prevData = queryClient.getQueryData(userKeys.detail(username));
+      const prevRequests = queryClient.getQueryData(friendshipKeys.requests());
 
       queryClient.setQueryData(userKeys.detail(username), (old: SuccessResponse<GetProfileResponse>) => {
         if (!old) return old;
@@ -108,13 +127,24 @@ export function useRejectFriendshipRequest(username: string) {
         };
       });
 
-      return { prevData };
+      queryClient.setQueryData(friendshipKeys.requests(), (old: SuccessResponse<FriendshipRequest[]>) => {
+        if (!old) return old;
+
+        return {
+          ...old,
+          data: old.data.filter((request) => request.id !== friendshipId),
+        };
+      });
+
+      return { prevData, prevRequests };
     },
     onError(_, _1, ctx) {
       queryClient.setQueryData(userKeys.detail(username), ctx?.prevData);
+      queryClient.setQueryData(friendshipKeys.requests(), ctx?.prevRequests);
     },
     onSettled() {
       queryClient.invalidateQueries({ queryKey: userKeys.detail(username) });
+      queryClient.invalidateQueries({ queryKey: friendshipKeys.requests() });
     },
   });
 }
@@ -127,7 +157,10 @@ export function useAcceptFriendshipRequest(username: string) {
     showOnError: true,
     async onMutate(friendshipId) {
       await queryClient.cancelQueries({ queryKey: userKeys.detail(username) });
+      await queryClient.cancelQueries({ queryKey: friendshipKeys.requests() });
+
       const prevData = queryClient.getQueryData(userKeys.detail(username));
+      const prevRequests = queryClient.getQueryData(friendshipKeys.requests());
 
       queryClient.setQueryData(userKeys.detail(username), (old: SuccessResponse<GetProfileResponse>) => {
         if (!old) return old;
@@ -145,13 +178,24 @@ export function useAcceptFriendshipRequest(username: string) {
         };
       });
 
-      return { prevData };
+      queryClient.setQueryData(friendshipKeys.requests(), (old: SuccessResponse<FriendshipRequest[]>) => {
+        if (!old) return old;
+
+        return {
+          ...old,
+          data: old.data.filter((request) => request.id !== friendshipId),
+        };
+      });
+
+      return { prevData, prevRequests };
     },
     onError(_, _1, ctx) {
       queryClient.setQueryData(userKeys.detail(username), ctx?.prevData);
+      queryClient.setQueryData(friendshipKeys.requests(), ctx?.prevRequests);
     },
     onSettled() {
       queryClient.invalidateQueries({ queryKey: userKeys.detail(username) });
+      queryClient.invalidateQueries({ queryKey: friendshipKeys.requests() });
     },
   });
 }

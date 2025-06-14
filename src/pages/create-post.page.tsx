@@ -25,7 +25,7 @@ import {
 import {
   IconWorld,
   IconLock,
-  IconUsers,
+  // IconUsers,
   IconPin,
   IconSend,
   IconArrowLeft,
@@ -50,12 +50,12 @@ const visibilityMap = {
     label: 'Private',
     description: 'Only you can see this post',
   },
-  [PostVisibility.enum.FRIENDS]: {
-    Icon: IconUsers,
-    color: 'green',
-    label: 'Friends',
-    description: 'Only your friends can see this post',
-  },
+  // [PostVisibility.enum.FRIENDS]: {
+  //   Icon: IconUsers,
+  //   color: 'green',
+  //   label: 'Friends',
+  //   description: 'Only your friends can see this post',
+  // },
 };
 
 export default function CreatePostPage() {

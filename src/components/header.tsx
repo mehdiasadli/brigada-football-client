@@ -2,6 +2,7 @@ import { Group, Paper, Container, rem, Box } from '@mantine/core';
 import HeaderUserMenu from './header-user-menu';
 import HeaderNavbar from './header-navbar';
 import HeaderSearchBar from './header-search';
+import HeaderFriends from './header-friends';
 
 export function Header() {
   return (
@@ -41,22 +42,13 @@ export function Header() {
           {/* Right side - Search + User Menu */}
           <Group gap='md' align='center'>
             {/* Center - Search Bar (Desktop) */}
-            <Box
-              hiddenFrom='lg'
-              style={{
-                flex: 1,
-                maxWidth: rem(500),
-                display: 'flex',
-                justifyContent: 'center',
-                paddingLeft: rem(20),
-                paddingRight: rem(20),
-              }}
-            >
-              <HeaderSearchBar />
-            </Box>
+
+            {/* <Box>
+              <HeaderFriends />
+            </Box> */}
 
             {/* Search Button for Mobile */}
-            <Box visibleFrom='lg'>
+            <Box>
               <HeaderSearchBar />
             </Box>
 

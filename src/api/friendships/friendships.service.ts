@@ -1,4 +1,5 @@
 import { Api } from '../define-api';
+import type { FriendshipRequest } from './friendships.responses';
 
 const api = Api.create('/friendships');
 
@@ -15,4 +16,5 @@ export const friendshipsService = {
   acceptFriendshipRequest: async (id: string) => {
     return await api.put(`/request/${id}/accept`);
   },
+  getRequests: async () => await api.get<FriendshipRequest[]>('/requests'),
 };

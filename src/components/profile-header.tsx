@@ -3,15 +3,15 @@ import { IconCalendar, IconCrown, IconMapPin, IconUsers } from '@tabler/icons-re
 import dayjs from 'dayjs';
 import type { GetProfileResponse } from '../api/users/users.responses';
 import type { UserRole } from '../schemas/entities/user.entity';
-import FriendshipButton from './friendship-button';
-import { useUserStore } from '../stores/user.store';
+// import FriendshipButton from './friendship-button';
+// import { useUserStore } from '../stores/user.store';
 
 interface ProfileHeaderProps {
   user: GetProfileResponse;
 }
 
 export default function ProfileHeader({ user }: ProfileHeaderProps) {
-  const currentUser = useUserStore((state) => state.user)!;
+  // const currentUser = useUserStore((state) => state.user)!;
 
   const getRoleColor = (role: (typeof UserRole.options)[number]) => {
     switch (role) {
@@ -136,11 +136,11 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
           </Group>
         </Stack>
 
-        {user.id !== currentUser.id && (
+        {/* {user.id !== currentUser.id && (
           <Box ml='auto'>
             <FriendshipButton friendship={user.friendship} username={user.username} userId={user.id} />
           </Box>
-        )}
+        )} */}
       </Group>
     </Paper>
   );
