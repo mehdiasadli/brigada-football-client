@@ -1,9 +1,10 @@
 import { ActionIcon, Badge, Box, Card, Group, Menu, Stack, Text } from '@mantine/core';
 import { UserRole, type UserSchema } from '../schemas/entities/user.entity';
-import { IconDots, IconLock, IconMail, IconTrash, IconUser } from '@tabler/icons-react';
+import { IconCalendar, IconDots, IconLock, IconMail, IconTrash, IconUser } from '@tabler/icons-react';
 import { useUserStore } from '../stores/user.store';
 import { useDeleteUser, useUpdateUserRole } from '../api/users/users.mutations';
 import { modals } from '@mantine/modals';
+import dayjs from 'dayjs';
 
 interface UserCardProps {
   user: UserSchema;
@@ -147,6 +148,12 @@ export function UserCard({ user }: UserCardProps) {
               <IconLock size={12} color='var(--mantine-color-gray-6)' />
               <Text size='xs' c='dimmed'>
                 {user.invalidPasswordAttempts} invalid password attempts
+              </Text>
+            </Group>
+            <Group gap='xs'>
+              <IconCalendar size={12} color='var(--mantine-color-gray-6)' />
+              <Text size='xs' c='dimmed'>
+                Created at {dayjs(user.createdAt).format('DD.MM.YYYY, HH:mm')}
               </Text>
             </Group>
           </Stack>
