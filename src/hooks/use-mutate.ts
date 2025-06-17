@@ -23,23 +23,11 @@ type AdditionalMutateOptions<TData = unknown, TVariables = void, TContext = unkn
   redirectOnSettled?:
     | string
     | ((data: TData | undefined, error: ApiError | null, variables: TVariables, context: TContext) => string);
-  refetchOnSuccess?:
-    | QueryKey
-    | QueryKey[]
-    | ((data: TData, variables: TVariables, context: TContext) => QueryKey | QueryKey[]);
-  refetchOnError?:
-    | QueryKey
-    | QueryKey[]
-    | ((error: ApiError, variables: TVariables, context: TContext) => QueryKey | QueryKey[]);
+  refetchOnSuccess?: QueryKey[] | ((data: TData, variables: TVariables, context: TContext) => QueryKey[]);
+  refetchOnError?: QueryKey[] | ((error: ApiError, variables: TVariables, context: TContext) => QueryKey[]);
   refetchOnSettled?:
-    | QueryKey
     | QueryKey[]
-    | ((
-        data: TData | undefined,
-        error: ApiError | null,
-        variables: TVariables,
-        context: TContext
-      ) => QueryKey | QueryKey[]);
+    | ((data: TData | undefined, error: ApiError | null, variables: TVariables, context: TContext) => QueryKey[]);
 };
 
 export type UseMutateOptions<TData = unknown, TVariables = void, TContext = unknown> = Omit<
@@ -94,9 +82,13 @@ export function useMutate<TData = unknown, TVariables = void, TContext = unknown
 
       if (refetchOnError) {
         if (refetchOnError instanceof Function) {
-          queryClient.invalidateQueries({ queryKey: refetchOnError(error, variables, context as TContext) });
+          refetchOnError(error, variables, context as TContext).forEach((queryKey) => {
+            queryClient.refetchQueries({ queryKey });
+          });
         } else {
-          queryClient.invalidateQueries({ queryKey: refetchOnError });
+          refetchOnError.forEach((queryKey) => {
+            queryClient.refetchQueries({ queryKey });
+          });
         }
       }
 
@@ -131,9 +123,13 @@ export function useMutate<TData = unknown, TVariables = void, TContext = unknown
 
       if (refetchOnSuccess) {
         if (refetchOnSuccess instanceof Function) {
-          queryClient.invalidateQueries({ queryKey: refetchOnSuccess(data, variables, context as TContext) });
+          refetchOnSuccess(data, variables, context as TContext).forEach((queryKey) => {
+            queryClient.refetchQueries({ queryKey });
+          });
         } else {
-          queryClient.invalidateQueries({ queryKey: refetchOnSuccess });
+          refetchOnSuccess.forEach((queryKey) => {
+            queryClient.refetchQueries({ queryKey });
+          });
         }
       }
 
@@ -150,9 +146,13 @@ export function useMutate<TData = unknown, TVariables = void, TContext = unknown
 
       if (refetchOnSettled) {
         if (refetchOnSettled instanceof Function) {
-          queryClient.invalidateQueries({ queryKey: refetchOnSettled(data, error, variables, context as TContext) });
+          refetchOnSettled(data, error, variables, context as TContext).forEach((queryKey) => {
+            queryClient.refetchQueries({ queryKey });
+          });
         } else {
-          queryClient.invalidateQueries({ queryKey: refetchOnSettled });
+          refetchOnSettled.forEach((queryKey) => {
+            queryClient.refetchQueries({ queryKey });
+          });
         }
       }
 

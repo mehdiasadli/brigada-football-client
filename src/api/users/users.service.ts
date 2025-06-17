@@ -24,6 +24,13 @@ export const usersService = {
       role: data.role,
     }),
   delete: async (id: string) => await api.delete<UserSchema>(`/${id}`),
+  uploadAvatar: async (file: File) => {
+    const formData = new FormData();
+    formData.append('avatar', file);
+
+    return await api.put<UserSchema, FormData>('/avatar/upload', formData);
+  },
+  deleteAvatar: async () => await api.delete<UserSchema>('/avatar/delete'),
 };
 
 type UpdateRoleData = {

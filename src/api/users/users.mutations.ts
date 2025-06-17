@@ -5,6 +5,9 @@ import { userKeys } from './users.queries';
 import type { SuccessResponse } from '../define-api';
 import type { PaginatedResult } from '../../schemas/query.schema';
 import type { UserSchema } from '../../schemas/entities/user.entity';
+import { useUserStore } from '../../stores/user.store';
+import { feedKeys } from '../feed/feed.queries';
+import { postsKeys } from '../posts/posts.queries';
 
 export function useUpdateUserRole() {
   const queryClient = useQueryClient();
@@ -103,5 +106,26 @@ export function useDeleteUser() {
     onSettled() {
       queryClient.invalidateQueries({ queryKey: userKeys.listIndex() });
     },
+  });
+}
+
+export function useUploadAvatar() {
+  const userStore = useUserStore();
+
+  return useMutate(usersService.uploadAvatar, {
+    showOnError: true,
+    showOnSuccess: 'Avatar uploaded successfully',
+    refetchOnSuccess: ({ data }) => [userKeys.detail(data.username), feedKeys.feed(), postsKeys.ofUser(data.username)],
+    onSuccess({ data }) {
+      console.log('refetching: ', [userKeys.detail(data.username), feedKeys.feed(), postsKeys.ofUser(data.username)]);
+      userStore.setUser(data);
+    },
+  });
+}
+
+export function useDeleteAvatar() {
+  return useMutate(usersService.deleteAvatar, {
+    showOnError: true,
+    showOnSuccess: 'Avatar deleted successfully',
   });
 }

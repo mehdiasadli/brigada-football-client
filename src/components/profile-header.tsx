@@ -1,8 +1,9 @@
-import { Avatar, Badge, Box, Group, Paper, Stack, Text, ThemeIcon, Title } from '@mantine/core';
+import { Badge, Box, Group, Paper, Stack, Text, ThemeIcon, Title } from '@mantine/core';
 import { IconCalendar, IconCrown, IconMapPin, IconUsers } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import type { GetProfileResponse } from '../api/users/users.responses';
 import type { UserRole } from '../schemas/entities/user.entity';
+import ProfileAvatar from './profile-avatar';
 // import FriendshipButton from './friendship-button';
 // import { useUserStore } from '../stores/user.store';
 
@@ -67,21 +68,7 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
 
       <Group align='center' gap='xl'>
         {/* Avatar */}
-        <Box style={{ position: 'relative' }}>
-          <Avatar
-            src={user.avatar}
-            size={120}
-            radius='xl'
-            style={{
-              border: '4px solid rgba(255, 255, 255, 0.3)',
-            }}
-          >
-            <Text size='xl' fw={700}>
-              {user.firstName[0]}
-              {user.lastName[0]}
-            </Text>
-          </Avatar>
-        </Box>
+        <ProfileAvatar user={user} />
 
         {/* User Info */}
         <Stack gap='sm' style={{ flex: 1 }}>
