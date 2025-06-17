@@ -101,7 +101,7 @@ export default function HeaderSearchBar() {
         onQueryChange={setQuery}
         searchProps={{
           leftSection: <IconSearch size={20} />,
-          placeholder: 'Search everything...',
+          placeholder: 'Search users or posts...',
           value: query,
           onChange: (event) => setQuery(event.currentTarget.value),
         }}
