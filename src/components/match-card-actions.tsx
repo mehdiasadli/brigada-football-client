@@ -6,6 +6,7 @@ import type { FindAllMatchesResponse } from '../api/matches/matches.responses';
 import { useDeleteMatch } from '../api/matches/matches.mutations';
 import { useUserStore } from '../stores/user.store';
 import { MatchStatus } from '../schemas/entities/match.entity';
+import ShareMenu from './share-menu';
 
 interface MatchCardActionsProps {
   match: FindAllMatchesResponse;
@@ -38,6 +39,17 @@ export default function MatchCardActions({ match }: MatchCardActionsProps) {
 
   return isCreator ? (
     <Group gap='xs'>
+      <ShareMenu
+        label='Share this match'
+        copyLink={`${window.location.origin}/matches/${match.id}`}
+        copyMessage='Match link copied to clipboard'
+        sharePath={`/matches/${match.id}`}
+        shareText={`Check out this match in Brigada Football`}
+        targetProps={{
+          color: 'violet',
+        }}
+      />
+
       {match.status === MatchStatus.enum.PENDING && (
         <Tooltip label='Complete Match'>
           <ActionIcon

@@ -4,23 +4,18 @@ import {
   IconHeart,
   IconHeartFilled,
   IconMessageCircle,
-  IconShare,
   // IconBookmark,
   // IconBookmarkFilled,
-  IconCopy,
-  IconBrandTwitter,
-  IconBrandFacebook,
-  IconBrandWhatsapp,
   IconDots,
   IconTrash,
 } from '@tabler/icons-react';
 import type { FeedPostResponse } from '../api/feed/feed.responses';
 import { useUserStore } from '../stores/user.store';
-import { notifications } from '@mantine/notifications';
 import { Link } from 'react-router-dom';
 import { useLike } from '../api/likes/likes.mutations';
 import { useDeletePost } from '../api/posts/posts.mutations';
 import { modals } from '@mantine/modals';
+import ShareMenu from './share-menu';
 
 interface PostFooterProps {
   post: FeedPostResponse;
@@ -61,7 +56,6 @@ export default function PostFooter({ post, detail = false }: PostFooterProps) {
   // Animation states
   const [isLikeAnimating, setIsLikeAnimating] = useState(false);
   const [isCommentHovered, setIsCommentHovered] = useState(false);
-  const [isShareHovered, setIsShareHovered] = useState(false);
 
   const handleLike = async () => {
     if (isLikeAnimating) return;
@@ -87,41 +81,6 @@ export default function PostFooter({ post, detail = false }: PostFooterProps) {
   //     autoClose: 2000,
   //   });
   // };
-
-  const handleCopyLink = () => {
-    const postUrl = `${window.location.origin}/posts/c/${post.id}`;
-    navigator.clipboard.writeText(postUrl);
-
-    notifications.show({
-      title: 'Link copied!',
-      message: 'Post link copied to clipboard',
-      color: 'green',
-      autoClose: 2000,
-    });
-  };
-
-  const handleSocialShare = (platform: string) => {
-    const postUrl = `${window.location.origin}/posts/c/${post.id}`;
-    const text = `Check out this post by ${post.author.firstName} ${post.author.lastName}`;
-
-    let shareUrl = '';
-
-    switch (platform) {
-      case 'twitter':
-        shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(postUrl)}`;
-        break;
-      case 'facebook':
-        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(postUrl)}`;
-        break;
-      case 'whatsapp':
-        shareUrl = `https://wa.me/?text=${encodeURIComponent(`${text} ${postUrl}`)}`;
-        break;
-    }
-
-    if (shareUrl) {
-      window.open(shareUrl, '_blank', 'width=600,height=400');
-    }
-  };
 
   return (
     <Box>
@@ -272,67 +231,13 @@ export default function PostFooter({ post, detail = false }: PostFooterProps) {
           </Tooltip> */}
 
           {/* Share Menu */}
-          <Menu shadow='lg' width={220} position='top-end' withArrow>
-            <Menu.Target>
-              <ActionIcon
-                size='lg'
-                radius='xl'
-                variant='subtle'
-                color='green'
-                onMouseEnter={() => setIsShareHovered(true)}
-                onMouseLeave={() => setIsShareHovered(false)}
-                style={{
-                  transform: isShareHovered ? 'scale(1.1) rotate(15deg)' : 'scale(1) rotate(0deg)',
-                  transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
-                  background: isShareHovered ? 'var(--mantine-color-green-0)' : 'transparent',
-                }}
-              >
-                <IconShare
-                  size={18}
-                  style={{
-                    transform: isShareHovered ? 'scale(1.1)' : 'scale(1)',
-                    transition: 'transform 0.3s ease',
-                  }}
-                />
-              </ActionIcon>
-            </Menu.Target>
-
-            <Menu.Dropdown
-              style={{
-                background: 'linear-gradient(135deg, white 0%, var(--mantine-color-gray-0) 100%)',
-                border: '1px solid var(--mantine-color-gray-2)',
-              }}
-            >
-              <Menu.Label>Share this post</Menu.Label>
-
-              <Menu.Item leftSection={<IconCopy size={16} />} onClick={handleCopyLink}>
-                Copy link
-              </Menu.Item>
-
-              <Menu.Divider />
-
-              <Menu.Item
-                leftSection={<IconBrandTwitter size={16} color='var(--mantine-color-blue-6)' />}
-                onClick={() => handleSocialShare('twitter')}
-              >
-                Share on Twitter
-              </Menu.Item>
-
-              <Menu.Item
-                leftSection={<IconBrandFacebook size={16} color='var(--mantine-color-blue-7)' />}
-                onClick={() => handleSocialShare('facebook')}
-              >
-                Share on Facebook
-              </Menu.Item>
-
-              <Menu.Item
-                leftSection={<IconBrandWhatsapp size={16} color='var(--mantine-color-teal-6)' />}
-                onClick={() => handleSocialShare('whatsapp')}
-              >
-                Share on WhatsApp
-              </Menu.Item>
-            </Menu.Dropdown>
-          </Menu>
+          <ShareMenu
+            label='Share this post'
+            copyLink={`${window.location.origin}/posts/c/${post.id}`}
+            copyMessage='Post link copied to clipboard'
+            sharePath={`/posts/c/${post.id}`}
+            shareText={`Check out this post by ${post.author.firstName} ${post.author.lastName}`}
+          />
 
           {/* Author Menu */}
           {isAuthor && (
