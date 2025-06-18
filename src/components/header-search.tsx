@@ -2,10 +2,11 @@ import { useState } from 'react';
 import { ActionIcon, ThemeIcon } from '@mantine/core';
 import { Spotlight, spotlight } from '@mantine/spotlight';
 import { useDebouncedValue, useHotkeys } from '@mantine/hooks';
-import { IconSearch, IconUser, IconMessageCircle } from '@tabler/icons-react';
+import { IconSearch, IconUser, IconMessageCircle, IconMapPin } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 import { useSearch } from '../api/search/search.queries';
-import { isSearchPost, isSearchUser, type SearchResponse } from '../api/search/search.responses';
+import { isSearchPost, isSearchUser, isSearchVenue, type SearchResponse } from '../api/search/search.responses';
+import dayjs from 'dayjs';
 
 export default function HeaderSearchBar() {
   const [query, setQuery] = useState('');
@@ -27,10 +28,10 @@ export default function HeaderSearchBar() {
         return <IconUser size={16} />;
       case 'post':
         return <IconMessageCircle size={16} />;
+      case 'venue':
+        return <IconMapPin size={16} />;
       // case 'match':
       //   return <IconTrophy size={16} />;
-      // case 'venue':
-      //   return <IconMapPin size={16} />;
       default:
         return <IconSearch size={16} />;
     }
@@ -42,10 +43,10 @@ export default function HeaderSearchBar() {
         return 'blue';
       case 'post':
         return 'yellow';
+      case 'venue':
+        return 'violet';
       // case 'match':
       //   return 'orange';
-      // case 'venue':
-      //   return 'violet';
       default:
         return 'gray';
     }
@@ -56,6 +57,32 @@ export default function HeaderSearchBar() {
       navigate(`/users/${result.item.username}`);
     } else if (isSearchPost(result)) {
       navigate(`/posts/c/${result.item.id}`);
+    } else if (isSearchVenue(result)) {
+      navigate(`/venues/${result.item.id}`);
+    }
+  };
+
+  const getLabel = (result: SearchResponse) => {
+    if (isSearchUser(result)) {
+      return result.item.firstName + ' ' + result.item.lastName;
+    } else if (isSearchPost(result)) {
+      return result.item.content.slice(0, 50) + '...';
+    } else if (isSearchVenue(result)) {
+      return result.item.name;
+    } else {
+      return '';
+    }
+  };
+
+  const getDescription = (result: SearchResponse) => {
+    if (isSearchUser(result)) {
+      return `@${result.item.username}`;
+    } else if (isSearchPost(result)) {
+      return `Posted by ${result.item.author.firstName} ${result.item.author.lastName} on ${dayjs(result.item.createdAt).format('DD.MM.YYYY')}`;
+    } else if (isSearchVenue(result)) {
+      return `Located at ${result.item.address}`;
+    } else {
+      return '';
     }
   };
 
@@ -84,11 +111,8 @@ export default function HeaderSearchBar() {
       <Spotlight
         actions={(results?.data ?? [])?.map((result) => ({
           id: result.item.id,
-          label:
-            result.type === 'user'
-              ? result.item.firstName + ' ' + result.item.lastName
-              : result.item.content.slice(0, 50) + '...',
-          description: result.type === 'user' ? result.item.username : result.item.createdAt.toLocaleString(),
+          label: getLabel(result),
+          description: getDescription(result),
           onClick: () => handleResultClick(result),
           leftSection: (
             <ThemeIcon size='md' radius='xl' color={getResultColor(result.type)} variant='light'>
@@ -101,7 +125,7 @@ export default function HeaderSearchBar() {
         onQueryChange={setQuery}
         searchProps={{
           leftSection: <IconSearch size={20} />,
-          placeholder: 'Search users or posts...',
+          placeholder: 'Search users, posts or venues...',
           value: query,
           onChange: (event) => setQuery(event.currentTarget.value),
         }}
