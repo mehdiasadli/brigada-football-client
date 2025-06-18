@@ -29,6 +29,7 @@ import DashboardUsersPage from './pages/dashboard-users.page';
 import CreatePostPage from './pages/create-post.page';
 import PostPage from './pages/post.page';
 import VenuePage from './pages/venue.page';
+import DashboardPostsPage from './pages/dashboard-posts.page';
 
 export default function Routes() {
   const { token } = useTokenStore();
@@ -65,6 +66,7 @@ export default function Routes() {
           <Route path='venues' element={<DashboardVenuesPage />} />
           <Route path='venues/add' element={<AddVenuePage />} />
           <Route path='users' element={<DashboardUsersPage />} />
+          <Route path='posts' element={<DashboardPostsPage />} />
         </Route>
       </Route>
       <Route path='/auth' element={!token ? <AuthLayout /> : <Navigate to='/' replace />}>

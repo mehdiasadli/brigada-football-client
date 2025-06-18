@@ -1,4 +1,12 @@
 === === === === === === === ===
+*Changes 18.06-03*
+
+- _ADD_: New PAGE for Dashboard Posts [ADMIN]
+- _ADD_: New quick actions on the dashboard [ADMIN]
+=== === === === === === === ===
+
+
+=== === === === === === === ===
 *Changes 18.06-02*
 
 - _ADD_: Descriptions for venue fields [ADMIN]

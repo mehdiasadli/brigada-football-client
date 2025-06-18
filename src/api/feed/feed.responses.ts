@@ -21,6 +21,11 @@ export type FeedPostResponse = PostSchema & {
   author: Pick<UserSchema, 'id' | 'firstName' | 'lastName' | 'avatar' | 'username'>;
   attachements: unknown[];
 };
+
+export type PostsResponse = Omit<FeedPostResponse, 'author'> & {
+  author: Pick<UserSchema, 'id' | 'firstName' | 'lastName' | 'avatar' | 'username' | 'role'>;
+};
+
 export type GetFeedResponse = FeedMatchResponse | FeedPostResponse;
 
 export function isMatch(item: GetFeedResponse): item is FeedMatchResponse {

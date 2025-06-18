@@ -1,5 +1,5 @@
 import { Paper, ThemeIcon, Text, Box, rem, Flex } from '@mantine/core';
-import { IconDashboard, IconMapPin, IconUsers } from '@tabler/icons-react';
+import { IconDashboard, IconMapPin, IconShare, IconUsers } from '@tabler/icons-react';
 import { Link, useLocation } from 'react-router-dom';
 
 const dashboardLinks = [
@@ -19,6 +19,12 @@ const dashboardLinks = [
     label: 'Users',
     to: '/dashboard/users',
     Icon: IconUsers,
+    color: 'indigo',
+  },
+  {
+    label: 'Posts',
+    to: '/dashboard/posts',
+    Icon: IconShare,
     color: 'indigo',
   },
   // {

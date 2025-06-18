@@ -141,7 +141,6 @@ export function useDeletePost() {
   return useMutate(postsService.delete, {
     showOnError: true,
     showOnSuccess: 'Post deleted successfully',
-    redirectOnSuccess: '/',
     async onMutate(postId) {
       await queryClient.cancelQueries({ queryKey: feedKeys.feed() });
       const prevFeed = queryClient.getQueryData(feedKeys.feed());
@@ -180,6 +179,7 @@ export function useDeletePost() {
     },
     onSettled() {
       queryClient.invalidateQueries({ queryKey: feedKeys.feed() });
+      queryClient.invalidateQueries({ queryKey: postsKeys.listIndex() });
     },
   });
 }

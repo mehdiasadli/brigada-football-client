@@ -1,9 +1,14 @@
 import { Card, ThemeIcon, Group, Paper, Stack, Text } from '@mantine/core';
-import { IconChevronRight, IconMapPin } from '@tabler/icons-react';
+import { IconBallFootball, IconChevronRight, IconMapPin, IconShare, IconTrophy } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
 export default function DashboardQuickActions() {
-  const quickActions = [{ label: 'Add Venue', icon: IconMapPin, color: 'green', path: '/dashboard/venues/add' }];
+  const quickActions = [
+    { label: 'Add Venue', icon: IconMapPin, color: 'green', path: '/dashboard/venues/add' },
+    { label: 'Add Post', icon: IconShare, color: 'blue', path: '/posts/create' },
+    { label: 'Add Fixture', icon: IconBallFootball, color: 'green', path: '/matches/create/fixture' },
+    { label: 'Add Resulted Match', icon: IconTrophy, color: 'blue', path: '/matches/create/result' },
+  ];
 
   return (
     <Card shadow='sm' padding='lg' radius='md' h='100%'>

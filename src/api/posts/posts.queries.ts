@@ -1,5 +1,6 @@
 import { useFetch } from '../../hooks/use-fetch';
 import { useInfinite } from '../../hooks/use-infinite';
+import type { OrderSchema, PaginationSchema } from '../../schemas/query.schema';
 import { postsService } from './posts.service';
 
 export const postsKeys = {
@@ -10,6 +11,10 @@ export const postsKeys = {
 
   ofUserIndex: () => [...postsKeys.index, 'ofUser'] as const,
   ofUser: (username: string) => [...postsKeys.ofUserIndex(), username] as const,
+
+  listIndex: () => [...postsKeys.index, 'list'] as const,
+  list: (paginationDto: Omit<PaginationSchema, 'page'>, orderDto: OrderSchema) =>
+    [...postsKeys.listIndex(), paginationDto, orderDto] as const,
 };
 
 export function usePost(postId: string) {
@@ -27,5 +32,19 @@ export function usePostsOfUser(username?: string) {
         limit: 10,
       }),
     enabled: !!username,
+  });
+}
+
+export function usePosts(paginationDto: Omit<PaginationSchema, 'page'>, orderDto: OrderSchema) {
+  return useInfinite({
+    queryKey: postsKeys.list(paginationDto, orderDto),
+    queryFn: (page) =>
+      postsService.findMany(
+        {
+          page,
+          limit: 10,
+        },
+        orderDto
+      ),
   });
 }
