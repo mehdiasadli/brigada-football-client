@@ -1,90 +1,65 @@
-import { useState } from 'react';
-import { Stack, Text, Box, Button, Group, ThemeIcon, Paper, Pagination, Center, Skeleton } from '@mantine/core';
+import { Stack, Text, Box, Group, ThemeIcon, Paper, Skeleton } from '@mantine/core';
 import {
   IconMessageCircle,
-  IconSortDescending,
-  IconSortAscending,
-  IconClock,
-  IconHeart,
+  // IconSortDescending,
+  // IconSortAscending,
+  // IconClock,
+  // IconHeart,
   IconSparkles,
 } from '@tabler/icons-react';
 import CommentCard from './comment-card';
-import type { Comment } from '../pages/post.page';
+import { useCommentsOfPost } from '../api/comments/comments.queries';
+import InfiniteList from './infinite-list';
+import { useUserStore } from '../stores/user.store';
 
 interface CommentListProps {
-  comments: Comment[];
+  postId: string;
   onUpdate: (commentId: string, newContent: string) => void;
-  onDelete: (commentId: string) => void;
-  onToggleLike: (commentId: string, userId: string) => void;
-  loading?: boolean;
 }
 
-type SortOption = 'newest' | 'oldest' | 'most-liked';
+export default function CommentList({ postId, onUpdate }: CommentListProps) {
+  const result = useCommentsOfPost(postId);
+  const currentUser = useUserStore((state) => state.user)!;
 
-export default function CommentList({ comments, onUpdate, onDelete, onToggleLike, loading = false }: CommentListProps) {
-  const [sortBy, setSortBy] = useState<SortOption>('newest');
-  const [currentPage, setCurrentPage] = useState(1);
-  const [isAnimating, setIsAnimating] = useState(false);
+  const currentUserId = currentUser.id; // Replace with actual current user ID
 
-  const commentsPerPage = 10;
-  const currentUserId = 'current-user'; // Replace with actual current user ID
+  // const handleSortChange = (newSort: SortOption) => {
+  //   if (newSort === sortBy) return;
 
-  // Sort comments based on selected option
-  const sortedComments = [...comments].sort((a, b) => {
-    switch (sortBy) {
-      case 'newest':
-        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-      case 'oldest':
-        return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
-      case 'most-liked':
-        return b.likes.length - a.likes.length;
-      default:
-        return 0;
-    }
-  });
+  //   setIsAnimating(true);
+  //   setSortBy(newSort);
+  //   setCurrentPage(1);
 
-  // Paginate comments
-  const totalPages = Math.ceil(sortedComments.length / commentsPerPage);
-  const startIndex = (currentPage - 1) * commentsPerPage;
-  const paginatedComments = sortedComments.slice(startIndex, startIndex + commentsPerPage);
+  //   setTimeout(() => setIsAnimating(false), 300);
+  // };
 
-  const handleSortChange = (newSort: SortOption) => {
-    if (newSort === sortBy) return;
+  // const getSortIcon = (option: SortOption) => {
+  //   switch (option) {
+  //     case 'newest':
+  //       return <IconSortDescending size={14} />;
+  //     case 'oldest':
+  //       return <IconSortAscending size={14} />;
+  //     case 'most-liked':
+  //       return <IconHeart size={14} />;
+  //     default:
+  //       return <IconClock size={14} />;
+  //   }
+  // };
 
-    setIsAnimating(true);
-    setSortBy(newSort);
-    setCurrentPage(1);
+  // const getSortLabel = (option: SortOption) => {
+  //   switch (option) {
+  //     case 'newest':
+  //       return 'Newest First';
+  //     case 'oldest':
+  //       return 'Oldest First';
+  //     case 'most-liked':
+  //       return 'Most Liked';
+  //     default:
+  //       return 'Default';
+  //   }
+  // };
 
-    setTimeout(() => setIsAnimating(false), 300);
-  };
-
-  const getSortIcon = (option: SortOption) => {
-    switch (option) {
-      case 'newest':
-        return <IconSortDescending size={14} />;
-      case 'oldest':
-        return <IconSortAscending size={14} />;
-      case 'most-liked':
-        return <IconHeart size={14} />;
-      default:
-        return <IconClock size={14} />;
-    }
-  };
-
-  const getSortLabel = (option: SortOption) => {
-    switch (option) {
-      case 'newest':
-        return 'Newest First';
-      case 'oldest':
-        return 'Oldest First';
-      case 'most-liked':
-        return 'Most Liked';
-      default:
-        return 'Default';
-    }
-  };
-
-  if (loading) {
+  if (result.isLoading) {
     return (
       <Stack gap='md'>
         {Array.from({ length: 3 }).map((_, index) => (
@@ -103,7 +78,7 @@ export default function CommentList({ comments, onUpdate, onDelete, onToggleLike
     );
   }
 
-  if (comments.length === 0) {
+  if (result.data && result.data.pages[0].data.meta.totalItems === 0) {
     return (
       <Paper
         p='xl'
@@ -162,7 +137,7 @@ export default function CommentList({ comments, onUpdate, onDelete, onToggleLike
   return (
     <Stack gap='lg'>
       {/* Sort Controls */}
-      <Paper
+      {/* <Paper
         p='md'
         radius='lg'
         style={{
@@ -206,77 +181,24 @@ export default function CommentList({ comments, onUpdate, onDelete, onToggleLike
             ))}
           </Group>
         </Group>
-      </Paper>
+      </Paper> */}
 
       {/* Comments */}
       <Box
         style={{
-          opacity: isAnimating ? 0.6 : 1,
-          transform: isAnimating ? 'translateY(10px)' : 'translateY(0)',
+          opacity: 1,
+          transform: 'translateY(0)',
           transition: 'all 0.3s ease',
         }}
       >
         <Stack gap='md'>
-          {paginatedComments.map((comment, index) => (
-            <Box
-              key={comment.id}
-              style={{
-                animation: `slideInUp 0.4s ease-out ${index * 0.1}s both`,
-              }}
-            >
-              <CommentCard
-                comment={comment}
-                currentUserId={currentUserId}
-                onUpdate={onUpdate}
-                onDelete={onDelete}
-                onToggleLike={onToggleLike}
-              />
-            </Box>
-          ))}
+          <InfiniteList
+            cols={{ base: 1, xs: 1, sm: 1, md: 1, lg: 1, xl: 1 }}
+            result={result}
+            render={(comment) => <CommentCard comment={comment} currentUserId={currentUserId} onUpdate={onUpdate} />}
+          />
         </Stack>
       </Box>
-
-      {/* Pagination */}
-      {totalPages > 1 && (
-        <Center>
-          <Paper
-            p='sm'
-            radius='lg'
-            style={{
-              background: 'var(--mantine-color-gray-0)',
-              border: '1px solid var(--mantine-color-gray-2)',
-            }}
-          >
-            <Pagination
-              value={currentPage}
-              onChange={setCurrentPage}
-              total={totalPages}
-              size='sm'
-              radius='xl'
-              color='blue'
-              styles={{
-                control: {
-                  border: 'none',
-                  '&[data-active]': {
-                    background:
-                      'linear-gradient(135deg, var(--mantine-color-blue-6) 0%, var(--mantine-color-cyan-6) 100%)',
-                    color: 'white',
-                  },
-                },
-              }}
-            />
-          </Paper>
-        </Center>
-      )}
-
-      {/* Load More Info */}
-      {comments.length > commentsPerPage && (
-        <Center>
-          <Text size='xs' c='dimmed' ta='center'>
-            Showing {Math.min(startIndex + commentsPerPage, comments.length)} of {comments.length} comments
-          </Text>
-        </Center>
-      )}
 
       <style>{`
         @keyframes slideInUp {

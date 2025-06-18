@@ -8,6 +8,9 @@ export type UserStatsResponse = {
   matchesCreated: number;
   totalRatingCount: number;
   averageRating: number | null;
+  totalPosts: number;
+  totalComments: number;
+  totalLikes: number;
 };
 
 export type LeaderboardResponse = {

@@ -1,85 +1,33 @@
 import { useState } from 'react';
-import {
-  Paper,
-  Group,
-  Avatar,
-  Text,
-  ActionIcon,
-  Menu,
-  Box,
-  Badge,
-  Textarea,
-  Button,
-  Tooltip,
-  rem,
-} from '@mantine/core';
-import {
-  IconHeart,
-  IconHeartFilled,
-  IconDots,
-  IconEdit,
-  IconTrash,
-  IconFlag,
-  IconCopy,
-  IconCheck,
-  IconX,
-  IconClock,
-} from '@tabler/icons-react';
+import { Paper, Group, Avatar, Text, ActionIcon, Menu, Box, Badge, Textarea, Button, rem } from '@mantine/core';
+import { IconDots, IconTrash, IconCheck, IconX, IconClock } from '@tabler/icons-react';
 import { notifications } from '@mantine/notifications';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import type { Comment } from '../pages/post.page';
+import type { GetCommentsOfPostResponse } from '../api/comments/comments.responses';
+import { Link } from 'react-router-dom';
+import CommentActions from './comment-actions';
+import { modals } from '@mantine/modals';
+import { useDeleteComment } from '../api/comments/comments.mutations';
 
 dayjs.extend(relativeTime);
 
 interface CommentCardProps {
-  comment: Comment;
+  comment: GetCommentsOfPostResponse;
   currentUserId: string;
   onUpdate: (commentId: string, newContent: string) => void;
-  onDelete: (commentId: string) => void;
-  onToggleLike: (commentId: string, userId: string) => void;
 }
 
-export default function CommentCard({ comment, currentUserId, onUpdate, onDelete, onToggleLike }: CommentCardProps) {
+export default function CommentCard({ comment, currentUserId, onUpdate }: CommentCardProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(comment.content);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isLikeAnimating, setIsLikeAnimating] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const deleteMutation = useDeleteComment(comment.postId);
 
   const isOwnComment = comment.authorId === currentUserId;
-  const isLiked = comment.likes.some((like) => like.userId === currentUserId);
-  const likesCount = comment.likes.length;
+  const isAuthor = comment.authorId === currentUserId;
   const isEdited = comment.editedAt !== null;
-
-  const handleLike = async () => {
-    if (isLikeAnimating) return;
-
-    setIsLikeAnimating(true);
-
-    try {
-      await onToggleLike(comment.id, currentUserId);
-
-      if (!isLiked) {
-        notifications.show({
-          title: '💙 Liked!',
-          message: 'You liked this comment',
-          color: 'blue',
-          autoClose: 2000,
-        });
-      }
-    } catch (error) {
-      console.error(error);
-
-      notifications.show({
-        title: 'Error',
-        message: 'Failed to update like',
-        color: 'red',
-      });
-    } finally {
-      setTimeout(() => setIsLikeAnimating(false), 300);
-    }
-  };
 
   const handleSaveEdit = async () => {
     if (!editContent.trim() || editContent === comment.content || isSubmitting) return;
@@ -115,47 +63,19 @@ export default function CommentCard({ comment, currentUserId, onUpdate, onDelete
   };
 
   const handleDelete = async () => {
-    try {
-      await onDelete(comment.id);
-
-      notifications.show({
-        title: '🗑️ Deleted',
-        message: 'Comment deleted successfully',
-        color: 'orange',
-        autoClose: 2000,
-      });
-    } catch (error) {
-      console.error(error);
-
-      notifications.show({
-        title: 'Error',
-        message: 'Failed to delete comment',
-        color: 'red',
-      });
-    }
+    deleteMutation.mutate(comment.id);
   };
 
-  const handleCopyLink = () => {
-    const commentUrl = `${window.location.href}#comment-${comment.id}`;
-    navigator.clipboard.writeText(commentUrl);
-
-    notifications.show({
-      title: 'Link copied!',
-      message: 'Comment link copied to clipboard',
-      color: 'green',
-      autoClose: 2000,
+  const openDeleteModal = () =>
+    modals.openConfirmModal({
+      title: 'Delete comment',
+      children: <Text>Are you sure you want to delete this comment?</Text>,
+      labels: {
+        confirm: 'Delete',
+        cancel: 'Cancel',
+      },
+      onConfirm: handleDelete,
     });
-  };
-
-  const handleReport = () => {
-    console.log('Report comment:', comment.id);
-    notifications.show({
-      title: 'Report submitted',
-      message: 'Thank you for reporting this comment',
-      color: 'blue',
-      autoClose: 3000,
-    });
-  };
 
   return (
     <Paper
@@ -168,7 +88,7 @@ export default function CommentCard({ comment, currentUserId, onUpdate, onDelete
         background: isOwnComment
           ? 'linear-gradient(135deg, rgba(34, 197, 94, 0.02) 0%, rgba(20, 184, 166, 0.02) 100%)'
           : 'linear-gradient(135deg, white 0%, var(--mantine-color-gray-0) 100%)',
-        border: isOwnComment ? '2px solid var(--mantine-color-green-2)' : '2px solid var(--mantine-color-gray-2)',
+        border: '2px solid var(--mantine-color-gray-2)',
         transition: 'all 0.3s ease',
         transform: isHovered ? 'translateY(-2px)' : 'translateY(0)',
         boxShadow: isHovered ? '0 8px 25px rgba(0, 0, 0, 0.1)' : '0 2px 8px rgba(0, 0, 0, 0.05)',
@@ -176,20 +96,6 @@ export default function CommentCard({ comment, currentUserId, onUpdate, onDelete
         overflow: 'hidden',
       }}
     >
-      {/* Own comment indicator */}
-      {isOwnComment && (
-        <Box
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            height: rem(3),
-            background: 'linear-gradient(90deg, var(--mantine-color-green-6) 0%, var(--mantine-color-teal-6) 100%)',
-          }}
-        />
-      )}
-
       <Group align='flex-start' gap='md'>
         {/* Avatar */}
         <Avatar
@@ -210,7 +116,7 @@ export default function CommentCard({ comment, currentUserId, onUpdate, onDelete
           {/* Header */}
           <Group justify='space-between' align='center' mb='xs'>
             <Group gap='xs' align='center'>
-              <Text size='sm' fw={600} c='gray.8'>
+              <Text size='sm' fw={600} c='gray.8' component={Link} to={`/users/${comment.author.username}`}>
                 {comment.author.firstName} {comment.author.lastName}
               </Text>
 
@@ -231,12 +137,19 @@ export default function CommentCard({ comment, currentUserId, onUpdate, onDelete
                   You
                 </Badge>
               )}
+
+              {isAuthor && (
+                <Badge size='xs' radius='xl' variant='light' color='blue'>
+                  OP
+                </Badge>
+              )}
             </Group>
 
             {/* Actions Menu */}
             <Menu shadow='lg' width={180} position='bottom-end' withArrow>
               <Menu.Target>
                 <ActionIcon
+                  loading={deleteMutation.isPending}
                   size='sm'
                   variant='subtle'
                   color='gray'
@@ -250,26 +163,20 @@ export default function CommentCard({ comment, currentUserId, onUpdate, onDelete
               </Menu.Target>
 
               <Menu.Dropdown>
-                <Menu.Item leftSection={<IconCopy size={14} />} onClick={handleCopyLink}>
+                {/* <Menu.Item leftSection={<IconCopy size={14} />} onClick={handleCopyLink}>
                   Copy link
-                </Menu.Item>
+                </Menu.Item> */}
 
-                {isOwnComment && (
+                {(isOwnComment || isAuthor) && (
                   <>
-                    <Menu.Item leftSection={<IconEdit size={14} />} onClick={() => setIsEditing(true)}>
+                    {/* <Menu.Item leftSection={<IconEdit size={14} />} onClick={() => setIsEditing(true)}>
                       Edit
-                    </Menu.Item>
+                    </Menu.Item> */}
 
-                    <Menu.Item leftSection={<IconTrash size={14} />} color='red' onClick={handleDelete}>
+                    <Menu.Item leftSection={<IconTrash size={14} />} color='red' onClick={openDeleteModal}>
                       Delete
                     </Menu.Item>
                   </>
-                )}
-
-                {!isOwnComment && (
-                  <Menu.Item leftSection={<IconFlag size={14} />} color='red' onClick={handleReport}>
-                    Report
-                  </Menu.Item>
                 )}
               </Menu.Dropdown>
             </Menu>
@@ -355,66 +262,7 @@ export default function CommentCard({ comment, currentUserId, onUpdate, onDelete
           )}
 
           {/* Actions */}
-          {!isEditing && (
-            <Group gap='lg' mt='md'>
-              {/* Like Button */}
-              <Tooltip label={isLiked ? 'Unlike comment' : 'Like comment'} position='top' withArrow>
-                <Group gap='xs' style={{ cursor: 'pointer' }} onClick={handleLike}>
-                  <ActionIcon
-                    size='md'
-                    radius='xl'
-                    variant={isLiked ? 'filled' : 'subtle'}
-                    color={isLiked ? 'blue' : 'gray'}
-                    style={{
-                      background: isLiked
-                        ? 'linear-gradient(135deg, var(--mantine-color-blue-5) 0%, var(--mantine-color-cyan-5) 100%)'
-                        : 'transparent',
-                      transform: isLikeAnimating ? 'scale(1.2) rotate(10deg)' : 'scale(1) rotate(0deg)',
-                      transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
-                      boxShadow: isLiked ? '0 3px 12px rgba(59, 130, 246, 0.3)' : '0 1px 4px rgba(0, 0, 0, 0.1)',
-                    }}
-                    onMouseEnter={(e) => {
-                      if (!isLiked) {
-                        e.currentTarget.style.transform = 'scale(1.1)';
-                        e.currentTarget.style.background = 'var(--mantine-color-blue-0)';
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      if (!isLiked) {
-                        e.currentTarget.style.transform = 'scale(1)';
-                        e.currentTarget.style.background = 'transparent';
-                      }
-                    }}
-                  >
-                    {isLiked ? (
-                      <IconHeartFilled
-                        size={14}
-                        style={{
-                          animation: isLikeAnimating ? 'heartPulse 0.6s ease-in-out' : 'none',
-                        }}
-                      />
-                    ) : (
-                      <IconHeart size={14} />
-                    )}
-                  </ActionIcon>
-
-                  {likesCount > 0 && (
-                    <Text
-                      size='xs'
-                      fw={600}
-                      c={isLiked ? 'blue.6' : 'gray.6'}
-                      style={{
-                        transition: 'all 0.3s ease',
-                        transform: isLikeAnimating ? 'scale(1.1)' : 'scale(1)',
-                      }}
-                    >
-                      {likesCount}
-                    </Text>
-                  )}
-                </Group>
-              </Tooltip>
-            </Group>
-          )}
+          <CommentActions postId={comment.postId} comment={comment} isEditing={isEditing} />
         </Box>
       </Group>
 

@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import {
   Container,
   Stack,
@@ -46,120 +45,24 @@ export default function PostPage() {
   const { postId } = useParams() as { postId: string };
   const { data: post, error: postError } = usePost(postId);
   const [scroll] = useWindowScroll();
-  const [comments, setComments] = useState<Comment[]>([
-    // Mock comments for demo
-    {
-      id: '1',
-      content:
-        'Great post! Really enjoyed reading about your match experience. The atmosphere must have been incredible! ⚽',
-      createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
-      editedAt: null,
-      updatedAt: new Date(Date.now() - 2 * 60 * 60 * 1000),
-      postId: postId,
-      authorId: 'user1',
-      author: {
-        id: 'user1',
-        firstName: 'Alex',
-        lastName: 'Johnson',
-        username: 'alexj',
-        avatar: null,
-      },
-      likes: [{ userId: 'user2' }, { userId: 'user3' }],
-    },
-    {
-      id: '2',
-      content: 'I was there too! What an amazing game. The second half was absolutely thrilling.',
-      createdAt: new Date(Date.now() - 45 * 60 * 1000), // 45 minutes ago
-      editedAt: new Date(Date.now() - 30 * 60 * 1000), // edited 30 minutes ago
-      updatedAt: new Date(Date.now() - 30 * 60 * 1000),
-      postId: postId,
-      authorId: 'user2',
-      author: {
-        id: 'user2',
-        firstName: 'Maria',
-        lastName: 'Garcia',
-        username: 'mariag',
-        avatar: null,
-      },
-      likes: [{ userId: 'user1' }],
-    },
-    {
-      id: '3',
-      content: 'Thanks for sharing! Looking forward to the next match 🔥',
-      createdAt: new Date(Date.now() - 15 * 60 * 1000), // 15 minutes ago
-      editedAt: null,
-      updatedAt: new Date(Date.now() - 15 * 60 * 1000),
-      postId: postId,
-      authorId: 'user3',
-      author: {
-        id: 'user3',
-        firstName: 'David',
-        lastName: 'Smith',
-        username: 'davidsmith',
-        avatar: null,
-      },
-      likes: [],
-    },
-  ]);
+  const [searchParams] = useSearchParams();
 
-  const addComment = (content: string) => {
-    const newComment: Comment = {
-      id: `temp-${Date.now()}`,
-      content,
-      createdAt: new Date(),
-      editedAt: null,
-      updatedAt: new Date(),
-      postId: postId,
-      authorId: 'current-user', // Replace with actual current user ID
-      author: {
-        id: 'current-user',
-        firstName: 'John', // Replace with actual current user data
-        lastName: 'Doe',
-        username: 'johndoe',
-        avatar: null,
-      },
-      likes: [],
-    };
-
-    setComments((prev) => [newComment, ...prev]);
-    console.log('Added comment:', newComment);
-  };
+  const isAutoFocusOnComment = searchParams.get('add-comment') === 'true';
 
   const updateComment = (commentId: string, newContent: string) => {
-    setComments((prev) =>
-      prev.map((comment) =>
-        comment.id === commentId
-          ? {
-              ...comment,
-              content: newContent,
-              editedAt: new Date(),
-              updatedAt: new Date(),
-            }
-          : comment
-      )
-    );
+    // setComments((prev) =>
+    //   prev.map((comment) =>
+    //     comment.id === commentId
+    //       ? {
+    //           ...comment,
+    //           content: newContent,
+    //           editedAt: new Date(),
+    //           updatedAt: new Date(),
+    //         }
+    //       : comment
+    //   )
+    // );
     console.log('Updated comment:', commentId, newContent);
-  };
-
-  const deleteComment = (commentId: string) => {
-    setComments((prev) => prev.filter((comment) => comment.id !== commentId));
-    console.log('Deleted comment:', commentId);
-  };
-
-  const toggleCommentLike = (commentId: string, userId: string) => {
-    setComments((prev) =>
-      prev.map((comment) => {
-        if (comment.id === commentId) {
-          const isLiked = comment.likes.some((like) => like.userId === userId);
-          return {
-            ...comment,
-            likes: isLiked ? comment.likes.filter((like) => like.userId !== userId) : [...comment.likes, { userId }],
-          };
-        }
-        return comment;
-      })
-    );
-    console.log('Toggled like for comment:', commentId);
   };
 
   if (postError) {
@@ -179,7 +82,6 @@ export default function PostPage() {
 
           {/* Comments Section */}
           <Paper
-            display='none'
             shadow='lg'
             radius='xl'
             p='xl'
@@ -225,7 +127,7 @@ export default function PostPage() {
                     <IconUsers size={14} />
                   </ThemeIcon>
                   <Text size='sm' fw={600} c='blue.6'>
-                    {comments.length} {comments.length === 1 ? 'comment' : 'comments'}
+                    {post.data._count.comments} {post.data._count.comments === 1 ? 'comment' : 'comments'}
                   </Text>
                 </Group>
               </Group>
@@ -233,15 +135,10 @@ export default function PostPage() {
               <Divider />
 
               {/* Add Comment */}
-              <AddComment onSubmit={addComment} />
+              <AddComment postId={postId} autoFocus={isAutoFocusOnComment} />
 
               {/* Comments List */}
-              <CommentList
-                comments={comments}
-                onUpdate={updateComment}
-                onDelete={deleteComment}
-                onToggleLike={toggleCommentLike}
-              />
+              <CommentList postId={postId} onUpdate={updateComment} />
             </Stack>
           </Paper>
         </Stack>

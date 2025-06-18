@@ -4,7 +4,11 @@
 - _ADD_: Descriptions for venue fields [ADMIN]
 - _ADD_: Avatar to the user card [ADMIN]
 - _CHANGE_: "View User" to "View Profile" in the user card [ADMIN]
-
+- _ADD_: User social stats to the profile page
+- _ADD_: Adding comments to the posts
+- _ADD_: Deleting comments from the posts
+- _ADD_: Adding likes to the comments
+- _ADD_: OP indicator on the comments
 === === === === === === === ===
 
 === === === === === === === ===

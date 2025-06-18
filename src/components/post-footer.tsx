@@ -12,7 +12,7 @@ import {
 import type { FeedPostResponse } from '../api/feed/feed.responses';
 import { useUserStore } from '../stores/user.store';
 import { Link } from 'react-router-dom';
-import { useLike } from '../api/likes/likes.mutations';
+import { usePostLike } from '../api/likes/likes.mutations';
 import { useDeletePost } from '../api/posts/posts.mutations';
 import { modals } from '@mantine/modals';
 import ShareMenu from './share-menu';
@@ -32,7 +32,7 @@ export default function PostFooter({ post, detail = false }: PostFooterProps) {
   // const [isBookmarked, setIsBookmarked] = useState(false);
   const [commentsCount] = useState(post._count.comments);
 
-  const likeMutation = useLike();
+  const likeMutation = usePostLike();
   const deleteMutation = useDeletePost();
 
   const openDeleteModal = () =>
@@ -157,12 +157,11 @@ export default function PostFooter({ post, detail = false }: PostFooterProps) {
           {!detail && (
             <Tooltip label='Comment on this post' position='top' withArrow>
               <Group
-                display='none'
                 component={Link}
                 // @ts-expect-error - Mantine error
-                to={`/posts/c/${post.id}`}
+                to={`/posts/c/${post.id}?add-comment=true`}
                 gap='xs'
-                style={{ cursor: 'pointer' }}
+                style={{ cursor: 'pointer', textDecoration: 'none' }}
                 onMouseEnter={() => setIsCommentHovered(true)}
                 onMouseLeave={() => setIsCommentHovered(false)}
               >
