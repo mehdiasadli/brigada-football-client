@@ -1,4 +1,4 @@
-import { Title, Button, Group, Text, Stack, SimpleGrid, Box, rem, ThemeIcon, Paper } from '@mantine/core';
+import { Title, Button, Group, Text, Stack, SimpleGrid, Box, rem, ThemeIcon, Paper, Loader } from '@mantine/core';
 import { IconPlus, IconMapPin } from '@tabler/icons-react';
 import { useVenues } from '../api/venues/venues.queries';
 import InfiniteList from '../components/infinite-list';
@@ -17,7 +17,7 @@ export function DashboardVenuesPage() {
     }
   );
 
-  const { data: stats } = useDashboardStats();
+  const { data: stats, status } = useDashboardStats();
 
   return (
     <Stack gap='xl'>
@@ -54,9 +54,13 @@ export function DashboardVenuesPage() {
               <IconMapPin size={14} />
             </ThemeIcon>
             <Box>
-              <Text size='xl' fw={700} c='blue'>
-                {stats?.data.venuesStats.totalVenues ?? 0}
-              </Text>
+              {status === 'pending' ? (
+                <Loader size='xs' mb={10} ml={2} color='blue' type='dots' />
+              ) : (
+                <Text size='xl' fw={700} c='blue'>
+                  {stats?.data.venuesStats.totalVenues ?? 0}
+                </Text>
+              )}
               <Text size='xs' c='dimmed'>
                 Total Venues
               </Text>
