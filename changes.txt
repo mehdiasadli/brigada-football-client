@@ -3,6 +3,7 @@
 
 - _ADD_: New PAGE for Dashboard Posts [ADMIN]
 - _ADD_: New quick actions on the dashboard [ADMIN]
+- _ADD_: Search matches to the global search
 === === === === === === === ===
 
 
