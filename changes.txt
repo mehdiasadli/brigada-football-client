@@ -3,6 +3,8 @@
 
 - _ADD_: Activity points to the user stats
 - _FIX_: Incorrect text in the header user menu
+- _ADD_: Info button to dashboard posts chart [ADMIN]
+- _CHANGE_: Dashboard posts summary card icon [ADMIN]
 === === === === === === === ===
 
 

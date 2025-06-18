@@ -1,7 +1,7 @@
 import { Card, Group, Progress, SimpleGrid, ThemeIcon } from '@mantine/core';
 import { useDashboardStats } from '../../api/dashboard/dashboard.queries';
 import { Text } from '@mantine/core';
-import { IconBallFootball, IconMapPin, IconMessageCircle, IconTrendingUp, IconUsers } from '@tabler/icons-react';
+import { IconBallFootball, IconMapPin, IconShare, IconTrendingUp, IconUsers } from '@tabler/icons-react';
 import ErrorComponent from '../error-component';
 import LoadingComponent from '../loading-component';
 
@@ -109,7 +109,7 @@ export function DashboardStats() {
             Total Posts
           </Text>
           <ThemeIcon color='red' variant='light' size='sm'>
-            <IconMessageCircle size={16} />
+            <IconShare size={16} />
           </ThemeIcon>
         </Group>
         <Text size='xl' fw={700} c='red'>

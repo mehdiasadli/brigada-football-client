@@ -2,8 +2,9 @@
 import { LineChart } from '@mantine/charts';
 import type { GetDashboardChartsResponse } from '../../../api/dashboard/dashboard.responses';
 import { useEffect, useState } from 'react';
-import { Card, Text, Group, ThemeIcon, Stack, Box, SimpleGrid } from '@mantine/core';
+import { Card, Text, Group, ThemeIcon, Stack, Box, SimpleGrid, Flex } from '@mantine/core';
 import { IconMessageCircle, IconMessage2Filled } from '@tabler/icons-react';
+import InfoButton from '../../info-button';
 
 interface ChartDataPoint {
   month: string;
@@ -159,13 +160,14 @@ export default function PostsChart({ data }: PostsChartProps) {
               <Text size='xl' fw={700} c='green'>
                 {totals.activePosts.toLocaleString()}
               </Text>
-              <Text size='sm' c='dimmed'>
-                Active Posts
-              </Text>
+
+              <Flex align='center' gap='sm'>
+                <Text size='sm' c='dimmed'>
+                  Active Posts
+                </Text>
+                <InfoButton text='Posts with comments are considered active' />
+              </Flex>
             </Box>
-            <Text size='xs' c='dimmed'>
-              Posts with comments are considered active
-            </Text>
           </Group>
         </Card>
       </SimpleGrid>
