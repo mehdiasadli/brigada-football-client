@@ -123,17 +123,37 @@ export default function AddVenuePage() {
           </Group>
 
           <Stack gap='lg'>
-            <TextInput label='Name' placeholder='Enter venue name' {...form.getInputProps('name')} />
-            <TextInput label='Address' placeholder='Enter venue address' {...form.getInputProps('address')} />
+            <TextInput
+              label='Name'
+              description="The name of the venue. Each name must be unique, so you can't use the same name for multiple venues."
+              placeholder='Enter venue name'
+              {...form.getInputProps('name')}
+            />
+            <TextInput
+              label='Address'
+              description='The address of the venue. This is the physical location of the venue.'
+              placeholder='Enter venue address'
+              {...form.getInputProps('address')}
+            />
             <Textarea
               label='Address Description'
+              description='The description of the address. For example, "Next to the main entrance of the university".'
               placeholder='Enter venue address description'
               {...form.getInputProps('addressDescription')}
             />
-            <Switch label='Has Parking' {...form.getInputProps('hasParking', { type: 'checkbox' })} />
-            <Switch label='Has Showers' {...form.getInputProps('hasShowers', { type: 'checkbox' })} />
+            <Switch
+              label='Has Parking'
+              description='Whether the venue has parking facilities.'
+              {...form.getInputProps('hasParking', { type: 'checkbox' })}
+            />
+            <Switch
+              label='Has Showers'
+              description='Whether the venue has shower facilities.'
+              {...form.getInputProps('hasShowers', { type: 'checkbox' })}
+            />
             <NumberInput
               label='Price per Hour (AZN)'
+              description='The price per hour for the venue. This is the price for the venue per hour.'
               placeholder='Enter price per hour'
               {...form.getInputProps('pricePerHour')}
             />
@@ -141,12 +161,19 @@ export default function AddVenuePage() {
               allowDeselect={false}
               label='Type'
               placeholder='Select venue type'
+              description='This is the type of the venue. If venue includes both indoor and outdoor facilities, select "Indoor/Outdoor".'
               {...form.getInputProps('type')}
               data={Object.values(VenueType.options).map((type) => ({ label: getTypeLabel(type), value: type }))}
             />
-            <TextInput label='Contact Name' placeholder='Enter contact name' {...form.getInputProps('contactName')} />
+            <TextInput
+              label='Contact Name'
+              description='The name of the contact person for the venue. It is optional.'
+              placeholder='Enter contact name'
+              {...form.getInputProps('contactName')}
+            />
             <TextInput
               label='Contact Phone'
+              description='The phone number of the contact person for the venue.'
               placeholder='Enter contact phone'
               {...form.getInputProps('contactPhone')}
             />
@@ -158,6 +185,10 @@ export default function AddVenuePage() {
             <Title order={3} fw={700} c='gray.8'>
               Mark location on map
             </Title>
+            <Text size='sm' c='gray.6'>
+              You can mark the location of the venue on the map. Drag the map by holding the left mouse button, and
+              double click to set the location.
+            </Text>
             <SetMap form={form} />
           </Stack>
         </Card>
