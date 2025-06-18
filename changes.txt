@@ -1,4 +1,11 @@
 === === === === === === === ===
+*Changes 18.06-04*
+
+- _ADD_: Activity points to the user stats
+=== === === === === === === ===
+
+
+=== === === === === === === ===
 *Changes 18.06-03*
 
 - _ADD_: New PAGE for Dashboard Posts [ADMIN]

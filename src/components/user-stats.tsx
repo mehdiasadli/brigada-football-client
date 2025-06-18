@@ -2,6 +2,7 @@ import { Paper, ThemeIcon, Title, Stack, Text, Group, SimpleGrid, Badge, Space }
 import { useUserStats } from '../api/stats/stats.queries';
 import LoadingComponent from './loading-component';
 import {
+  IconActivity,
   IconAward,
   IconBallFootball,
   IconChartBar,
@@ -19,7 +20,7 @@ interface UserStatsProps {
   userId: string;
 }
 
-export default function UserPerformanceStats({ userId }: UserStatsProps) {
+export default function UserStats({ userId }: UserStatsProps) {
   const { data: userStats, status: userStatsStatus } = useUserStats(userId);
 
   if (userStatsStatus === 'pending') {
@@ -77,6 +78,30 @@ export default function UserPerformanceStats({ userId }: UserStatsProps) {
       </Group>
 
       <SimpleGrid cols={{ base: 2, sm: 4 }} spacing='lg'>
+        {/* Activity */}
+        <Paper
+          p='lg'
+          radius='xl'
+          withBorder
+          style={{
+            background: 'linear-gradient(135deg, var(--mantine-color-red-0) 0%, white 100%)',
+            border: '2px solid var(--mantine-color-red-2)',
+            textAlign: 'center',
+          }}
+        >
+          <Stack align='center' gap='sm'>
+            <ThemeIcon size={48} radius='xl' color='red' variant='light'>
+              <IconActivity size={24} />
+            </ThemeIcon>
+            <Text size='xl' fw={900} c='red.8'>
+              {stats.activity ?? 0}
+            </Text>
+            <Text size='sm' fw={600} c='gray.7' tt='uppercase'>
+              Activity Points
+            </Text>
+          </Stack>
+        </Paper>
+
         {/* Posts */}
         <Paper
           p='lg'

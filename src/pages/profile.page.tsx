@@ -10,7 +10,7 @@ import { usePostsOfUser } from '../api/posts/posts.queries';
 import FeedPostCard from '../components/feed-post-card';
 import { useUserStore } from '../stores/user.store';
 import ProfileHeader from '../components/profile-header';
-import UserPerformanceStats from '../components/user-stats';
+import UserStats from '../components/user-stats';
 
 export default function ProfilePage() {
   const { username } = useParams();
@@ -35,7 +35,7 @@ export default function ProfilePage() {
         <ProfileHeader user={user} />
 
         {/* Statistics Section */}
-        <UserPerformanceStats userId={user.id} />
+        <UserStats userId={user.id} />
 
         {/* Personal Information */}
         <Stack gap='lg'>

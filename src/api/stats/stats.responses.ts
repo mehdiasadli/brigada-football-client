@@ -11,6 +11,7 @@ export type UserStatsResponse = {
   totalPosts: number;
   totalComments: number;
   totalLikes: number;
+  activity: number;
 };
 
 export type LeaderboardResponse = {
