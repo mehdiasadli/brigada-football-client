@@ -2,6 +2,7 @@ import type { VenueSchema } from '../../schemas/entities/venue.entity';
 import type { OrderSchema, PaginatedResult, PaginationSchema } from '../../schemas/query.schema';
 import type { CreateVenueSchema } from '../../schemas/venues.schema';
 import { Api } from '../define-api';
+import type { FindOneVenueResponse } from './venues.responses';
 
 const api = Api.create('/venues');
 
@@ -22,4 +23,5 @@ export const venuesService = {
   venuesOnMap: () => api.get<VenueSchema[]>('/map'),
   create: (data: CreateVenueSchema) => api.post<VenueSchema, CreateVenueSchema>('/', data),
   delete: (id: string) => api.delete<void>(`/${id}`),
+  findOne: (id: string) => api.get<FindOneVenueResponse>(`/${id}`),
 };

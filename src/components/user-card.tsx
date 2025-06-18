@@ -1,10 +1,11 @@
 import { ActionIcon, Badge, Box, Card, Group, Menu, Stack, Text } from '@mantine/core';
 import { UserRole, type UserSchema } from '../schemas/entities/user.entity';
-import { IconCalendar, IconDots, IconLock, IconMail, IconTrash, IconUser } from '@tabler/icons-react';
+import { IconCalendar, IconDots, IconEye, IconLock, IconMail, IconTrash, IconUser } from '@tabler/icons-react';
 import { useUserStore } from '../stores/user.store';
 import { useDeleteUser, useUpdateUserRole } from '../api/users/users.mutations';
 import { modals } from '@mantine/modals';
 import dayjs from 'dayjs';
+import { Link } from 'react-router-dom';
 
 interface UserCardProps {
   user: UserSchema;
@@ -112,21 +113,24 @@ export function UserCard({ user }: UserCardProps) {
             </Group>
           </Box>
 
-          {canDelete(user.id, user.role) && (
-            <Menu shadow='md' width={200}>
-              <Menu.Target>
-                <ActionIcon variant='subtle' color='gray'>
-                  <IconDots size={16} />
-                </ActionIcon>
-              </Menu.Target>
+          <Menu shadow='md' width={200}>
+            <Menu.Target>
+              <ActionIcon variant='subtle' color='gray'>
+                <IconDots size={16} />
+              </ActionIcon>
+            </Menu.Target>
 
-              <Menu.Dropdown>
+            <Menu.Dropdown>
+              <Menu.Item component={Link} to={`/users/${user.username}`} leftSection={<IconEye size={14} />}>
+                View User
+              </Menu.Item>
+              {canDelete(user.id, user.role) && (
                 <Menu.Item leftSection={<IconTrash size={14} />} color='red' onClick={openDeleteModal}>
                   Delete User
                 </Menu.Item>
-              </Menu.Dropdown>
-            </Menu>
-          )}
+              )}
+            </Menu.Dropdown>
+          </Menu>
         </Group>
       </Card.Section>
 

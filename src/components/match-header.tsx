@@ -13,8 +13,7 @@ import {
   IconBuildingStadium,
 } from '@tabler/icons-react';
 import dayjs from 'dayjs';
-import { VenueMapModal } from './venue-map-modal';
-import { modals } from '@mantine/modals';
+import { Link } from 'react-router-dom';
 
 interface MatchHeaderProps {
   match: FindOneMatchResponse;
@@ -41,16 +40,6 @@ export default function MatchHeader({ match, asPost = false }: MatchHeaderProps)
         ? 'away'
         : 'draw'
     : null;
-
-  const openVenueMapModal = () => {
-    if (!match.venue) return;
-
-    modals.open({
-      withCloseButton: false,
-      size: 'xl',
-      children: <VenueMapModal venue={match.venue} />,
-    });
-  };
 
   return (
     <Stack gap='xl'>
@@ -189,7 +178,8 @@ export default function MatchHeader({ match, asPost = false }: MatchHeaderProps)
                 mt={10}
                 leftSection={<IconBuildingStadium size={16} />}
                 color={'green'}
-                onClick={openVenueMapModal}
+                component={match.venue ? Link : undefined}
+                to={`/venues/${match.venueId}`}
               >
                 VENUE: {match.venueName}
               </Badge>
@@ -240,7 +230,8 @@ export default function MatchHeader({ match, asPost = false }: MatchHeaderProps)
                 mt={10}
                 leftSection={<IconBuildingStadium size={16} />}
                 color={'blue'}
-                onClick={openVenueMapModal}
+                component={Link}
+                to={`/venues/${match.venueId}`}
               >
                 VENUE: {match.venueName}
               </Badge>
@@ -346,7 +337,7 @@ export default function MatchHeader({ match, asPost = false }: MatchHeaderProps)
                     {match.venueName}
                   </Text>
                 ) : (
-                  <Anchor size='lg' onClick={openVenueMapModal}>
+                  <Anchor size='lg' component={Link} to={`/venues/${match.venueId}`}>
                     {match.venue.name}
                   </Anchor>
                 )}

@@ -1,10 +1,11 @@
 import { Group, Card, Text, Badge, ActionIcon, Stack, Box, Menu, Button } from '@mantine/core';
-import { IconTrash, IconDots, IconMap, IconPhone, IconUser, IconCurrencyDollar } from '@tabler/icons-react';
+import { IconTrash, IconDots, IconMap, IconPhone, IconUser, IconCurrencyDollar, IconEye } from '@tabler/icons-react';
 
 import { VenueType, type VenueSchema } from '../schemas/entities/venue.entity';
 import { modals } from '@mantine/modals';
 import { VenueMapModal } from './venue-map-modal';
 import { useDeleteVenue } from '../api/venues/venues.mutations';
+import { Link } from 'react-router-dom';
 
 interface VenueCardProps {
   venue: VenueSchema;
@@ -97,6 +98,9 @@ export function VenueCard({ venue }: VenueCardProps) {
             </Menu.Target>
 
             <Menu.Dropdown>
+              <Menu.Item component={Link} to={`/venues/${venue.id}`} leftSection={<IconEye size={14} />}>
+                View Venue
+              </Menu.Item>
               <Menu.Item leftSection={<IconTrash size={14} />} color='red' onClick={openDeleteModal}>
                 Delete Venue
               </Menu.Item>

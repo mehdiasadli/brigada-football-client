@@ -11,10 +11,19 @@ export const venuesKeys = {
 
   map: () => [...venuesKeys.index, 'map'] as const,
 
+  detailsIndex: () => [...venuesKeys.index, 'details'] as const,
+  details: (id: string) => [...venuesKeys.detailsIndex(), id] as const,
+
   listIndex: () => [...venuesKeys.index, 'list'] as const,
   list: (pagination: Omit<PaginationSchema, 'page'>, order: OrderSchema) =>
     [...venuesKeys.listIndex(), pagination, order] as const,
 };
+
+export function useVenue(id: string) {
+  return useFetch(venuesKeys.details(id), () => venuesService.findOne(id), {
+    enabled: !!id,
+  });
+}
 
 export function useVenues(pagination: Omit<PaginationSchema, 'page'>, order: OrderSchema) {
   return useInfinite({

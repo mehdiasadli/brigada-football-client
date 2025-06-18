@@ -28,6 +28,7 @@ import AddVenuePage from './pages/add-venue.page';
 import DashboardUsersPage from './pages/dashboard-users.page';
 import CreatePostPage from './pages/create-post.page';
 import PostPage from './pages/post.page';
+import VenuePage from './pages/venue.page';
 
 export default function Routes() {
   const { token } = useTokenStore();
@@ -49,6 +50,7 @@ export default function Routes() {
         <Route path='users/:username?' element={<ProfilePage />} />
         <Route path='posts/create' element={<CreatePostPage />} />
         <Route path='posts/c/:postId' element={<PostPage />} />
+        <Route path='venues/:venueId' element={<VenuePage />} />
         <Route
           path='dashboard'
           element={
