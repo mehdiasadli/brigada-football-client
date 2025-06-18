@@ -125,7 +125,7 @@ export default function HeaderUserMenu() {
               Profile
             </Text>
             <Text size='xs' c='dimmed'>
-              View and edit your profile
+              View your profile
             </Text>
           </div>
         </Menu.Item>
