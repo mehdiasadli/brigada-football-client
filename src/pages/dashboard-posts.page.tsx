@@ -1,5 +1,5 @@
-import { Title, Button, Group, Text, Stack, SimpleGrid, Box, rem, ThemeIcon, Paper } from '@mantine/core';
-import { IconPlus, IconMapPin } from '@tabler/icons-react';
+import { Title, Button, Group, Text, Stack, SimpleGrid, Box, rem, ThemeIcon, Paper, Loader } from '@mantine/core';
+import { IconPlus, IconShare } from '@tabler/icons-react';
 import InfiniteList from '../components/infinite-list';
 import { Link } from 'react-router-dom';
 import { usePosts } from '../api/posts/posts.queries';
@@ -17,7 +17,7 @@ export default function DashboardPostsPage() {
     }
   );
 
-  const { data: stats } = useDashboardStats();
+  const { data: stats, status } = useDashboardStats();
 
   return (
     <Stack gap='xl'>
@@ -51,12 +51,16 @@ export default function DashboardPostsPage() {
         <Paper p='md' radius='md' style={{ border: '1px solid var(--mantine-color-gray-2)' }}>
           <Group gap='xs'>
             <ThemeIcon color='blue' variant='light' size='sm'>
-              <IconMapPin size={14} />
+              <IconShare size={14} />
             </ThemeIcon>
             <Box>
-              <Text size='xl' fw={700} c='blue'>
-                {stats?.data.postsStats.totalPosts ?? 0}
-              </Text>
+              {status === 'pending' ? (
+                <Loader size='xs' mb={10} ml={2} color='blue' type='dots' />
+              ) : (
+                <Text size='xl' fw={700} c='blue'>
+                  {stats?.data.postsStats.totalPosts ?? 0}
+                </Text>
+              )}
               <Text size='xs' c='dimmed'>
                 Total Posts
               </Text>

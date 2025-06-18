@@ -1,8 +1,8 @@
-import { Box, Group, Paper, rem, SimpleGrid, Stack, Text, ThemeIcon, Title } from '@mantine/core';
+import { Box, Group, Loader, Paper, rem, SimpleGrid, Stack, Text, ThemeIcon, Title } from '@mantine/core';
 import { useUsers } from '../api/users/users.queries';
 import InfiniteList from '../components/infinite-list';
 import { UserCard } from '../components/user-card';
-import { IconMapPin } from '@tabler/icons-react';
+import { IconUsers } from '@tabler/icons-react';
 import { useDashboardStats } from '../api/dashboard/dashboard.queries';
 
 export default function DashboardUsersPage() {
@@ -22,7 +22,7 @@ export default function DashboardUsersPage() {
     },
     true
   );
-  const { data: stats } = useDashboardStats();
+  const { data: stats, status } = useDashboardStats();
 
   return (
     <Stack gap='xl'>
@@ -52,12 +52,16 @@ export default function DashboardUsersPage() {
         <Paper p='md' radius='md' style={{ border: '1px solid var(--mantine-color-gray-2)' }}>
           <Group gap='xs'>
             <ThemeIcon color='blue' variant='light' size='sm'>
-              <IconMapPin size={14} />
+              <IconUsers size={14} />
             </ThemeIcon>
             <Box>
-              <Text size='xl' fw={700} c='blue'>
-                {stats?.data.usersStats.totalUsers ?? 0}
-              </Text>
+              {status === 'pending' ? (
+                <Loader size='xs' mb={10} ml={2} color='blue' type='dots' />
+              ) : (
+                <Text size='xl' fw={700} c='blue'>
+                  {stats?.data.usersStats.totalUsers ?? 0}
+                </Text>
+              )}
               <Text size='xs' c='dimmed'>
                 Total Users
               </Text>

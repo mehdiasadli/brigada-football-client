@@ -5,6 +5,10 @@
 - _FIX_: Incorrect text in the header user menu
 - _ADD_: Info button to dashboard posts chart [ADMIN]
 - _CHANGE_: Dashboard posts summary card icon [ADMIN]
+- _FIX_: Dashboard users summary card icon on dashboard users page [ADMIN]
+- _ADD_: Loading state to the dashboard users summary card [ADMIN]
+- _FIX_: Dashboard posts summary card icon on dashboard posts page [ADMIN]
+- _ADD_: Loading state to the dashboard posts summary card [ADMIN]
 === === === === === === === ===
 
 
