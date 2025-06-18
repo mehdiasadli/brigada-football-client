@@ -2,11 +2,18 @@ import { useState } from 'react';
 import { ActionIcon, ThemeIcon } from '@mantine/core';
 import { Spotlight, spotlight } from '@mantine/spotlight';
 import { useDebouncedValue, useHotkeys } from '@mantine/hooks';
-import { IconSearch, IconUser, IconMessageCircle, IconMapPin } from '@tabler/icons-react';
+import { IconSearch, IconUser, IconMessageCircle, IconMapPin, IconTrophy } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 import { useSearch } from '../api/search/search.queries';
-import { isSearchPost, isSearchUser, isSearchVenue, type SearchResponse } from '../api/search/search.responses';
+import {
+  isSearchMatch,
+  isSearchPost,
+  isSearchUser,
+  isSearchVenue,
+  type SearchResponse,
+} from '../api/search/search.responses';
 import dayjs from 'dayjs';
+import { MatchStatus } from '../schemas/entities/match.entity';
 
 export default function HeaderSearchBar() {
   const [query, setQuery] = useState('');
@@ -30,8 +37,8 @@ export default function HeaderSearchBar() {
         return <IconMessageCircle size={16} />;
       case 'venue':
         return <IconMapPin size={16} />;
-      // case 'match':
-      //   return <IconTrophy size={16} />;
+      case 'match':
+        return <IconTrophy size={16} />;
       default:
         return <IconSearch size={16} />;
     }
@@ -45,8 +52,8 @@ export default function HeaderSearchBar() {
         return 'yellow';
       case 'venue':
         return 'violet';
-      // case 'match':
-      //   return 'orange';
+      case 'match':
+        return 'red';
       default:
         return 'gray';
     }
@@ -59,6 +66,8 @@ export default function HeaderSearchBar() {
       navigate(`/posts/c/${result.item.id}`);
     } else if (isSearchVenue(result)) {
       navigate(`/venues/${result.item.id}`);
+    } else if (isSearchMatch(result)) {
+      navigate(`/matches/${result.item.id}`);
     }
   };
 
@@ -69,6 +78,16 @@ export default function HeaderSearchBar() {
       return result.item.content.slice(0, 50) + '...';
     } else if (isSearchVenue(result)) {
       return result.item.name;
+    } else if (isSearchMatch(result)) {
+      const team1Name = result.item.teams[0].name || 'Team 1';
+      const team2Name = result.item.teams[1].name || 'Team 2';
+      const status = result.item.status;
+
+      if (status === MatchStatus.enum.PENDING) {
+        return `Upcoming match: ${team1Name} vs ${team2Name}`;
+      }
+
+      return `See results: ${team1Name} vs ${team2Name}`;
     } else {
       return '';
     }
@@ -81,6 +100,8 @@ export default function HeaderSearchBar() {
       return `Posted by ${result.item.author.firstName} ${result.item.author.lastName} on ${dayjs(result.item.createdAt).format('DD.MM.YYYY')}`;
     } else if (isSearchVenue(result)) {
       return `Located at ${result.item.address}`;
+    } else if (isSearchMatch(result)) {
+      return `On ${dayjs(result.item.startTime).format('DD.MM.YYYY, HH:mm')} at ${result.item.venueName || 'Unknown venue'}`;
     } else {
       return '';
     }
@@ -125,7 +146,7 @@ export default function HeaderSearchBar() {
         onQueryChange={setQuery}
         searchProps={{
           leftSection: <IconSearch size={20} />,
-          placeholder: 'Search users, posts or venues...',
+          placeholder: 'Search users, posts, venues or matches...',
           value: query,
           onChange: (event) => setQuery(event.currentTarget.value),
         }}
