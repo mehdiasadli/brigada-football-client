@@ -55,6 +55,11 @@ export default function RegisterPage() {
       return {
         ...values,
         dateOfBirth,
+        firstName: values.firstName.trim(),
+        lastName: values.lastName.trim(),
+        username: values.username.trim().toLowerCase(),
+        placeOfBirth: values.placeOfBirth.trim(),
+        email: values.email.trim().toLowerCase(),
       };
     },
   });
