@@ -1,4 +1,4 @@
-import { ActionIcon, Badge, Box, Card, Group, Menu, Stack, Text } from '@mantine/core';
+import { ActionIcon, Avatar, Badge, Box, Card, Group, Menu, Stack, Text } from '@mantine/core';
 import { UserRole, type UserSchema } from '../schemas/entities/user.entity';
 import { IconCalendar, IconDots, IconEye, IconLock, IconMail, IconTrash, IconUser } from '@tabler/icons-react';
 import { useUserStore } from '../stores/user.store';
@@ -82,6 +82,7 @@ export function UserCard({ user }: UserCardProps) {
         <Group justify='space-between' align='flex-start'>
           <Box style={{ flex: 1 }}>
             <Group gap='xs' mb='xs'>
+              <Avatar src={user.avatar} size='md' radius='xl' />
               <Text size='lg' fw={600} lineClamp={1}>
                 {user.firstName} {user.lastName}
               </Text>
@@ -122,7 +123,7 @@ export function UserCard({ user }: UserCardProps) {
 
             <Menu.Dropdown>
               <Menu.Item component={Link} to={`/users/${user.username}`} leftSection={<IconEye size={14} />}>
-                View User
+                View Profile
               </Menu.Item>
               {canDelete(user.id, user.role) && (
                 <Menu.Item leftSection={<IconTrash size={14} />} color='red' onClick={openDeleteModal}>

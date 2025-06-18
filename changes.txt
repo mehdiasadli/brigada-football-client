@@ -1,4 +1,13 @@
 === === === === === === === ===
+*Changes 18.06-02*
+
+- _ADD_: Descriptions for venue fields [ADMIN]
+- _ADD_: Avatar to the user card [ADMIN]
+- _CHANGE_: "View User" to "View Profile" in the user card [ADMIN]
+
+=== === === === === === === ===
+
+=== === === === === === === ===
 *Changes 18.06-01*
 
 - _REMOVE_: Friendship requests from the user page
