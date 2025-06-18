@@ -1,0 +1,9 @@
+=== === === === === === === ===
+*Changes 18.06-01*
+
+- _REMOVE_: Friendship requests from the user page
+- _ADD_: New PAGE for venue details
+- _ADD_: Venue search to the global search
+- _ADD_: Profile pictures
+=== === === === === === === ===
+
