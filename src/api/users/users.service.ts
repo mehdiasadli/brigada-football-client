@@ -10,7 +10,7 @@ const api = Api.create('/users');
 
 export const usersService = {
   findAll: async (pagination: PaginationSchema, order: OrderSchema, search: SearchSchema) =>
-    await api.get<PaginatedResult<UserSchema>>('/', {
+    await api.get<PaginatedResult<UserSchema & { activity: number }>>('/', {
       params: { ...pagination, ...order, ...search },
     }),
   findOne: async (id: string) => await api.get<UserSchema>(`/${id}`),

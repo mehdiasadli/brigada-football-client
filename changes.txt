@@ -2,6 +2,7 @@
 *Changes 18.06-05*
 
 - _ADD_: Loading state to the dashboard venues summary card [ADMIN]
+- _ADD_: Activity points to the user card [ADMIN]
 === === === === === === === ===
 
 
