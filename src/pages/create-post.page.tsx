@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from '@mantine/form';
 import { createPostSchema, type CreatePostSchema } from '../schemas/posts.schema';
 import { zodResolver } from 'mantine-form-zod-resolver';
@@ -21,16 +21,28 @@ import {
   Avatar,
   Divider,
   ActionIcon,
+  NumberInput,
+  TextInput,
+  SimpleGrid,
+  Badge,
+  Collapse,
+  Alert,
 } from '@mantine/core';
 import {
   IconWorld,
   IconLock,
-  // IconUsers,
   IconPin,
   IconSend,
   IconArrowLeft,
   IconSparkles,
   IconEdit,
+  IconTrash,
+  IconPlus,
+  IconEye,
+  IconEyeOff,
+  IconAlertCircle,
+  IconBallFootball,
+  IconCheck,
 } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 import { PostVisibility } from '../schemas/entities/post.entity';
@@ -62,6 +74,7 @@ export default function CreatePostPage() {
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
   const currentUser = useUserStore((state) => state.user)!;
+  const [attachPoll, setAttachPoll] = useState(false);
 
   const form = useForm<CreatePostSchema>({
     initialValues: {
@@ -69,8 +82,18 @@ export default function CreatePostPage() {
       images: [],
       isPinned: false,
       visibility: PostVisibility.enum.PUBLIC,
+      poll: null,
     },
     validate: zodResolver(createPostSchema),
+    onValuesChange(values) {
+      if (values.poll) {
+        const optionsCount = values.poll.options.length;
+
+        if (values.poll.maxVotes > optionsCount) {
+          values.poll.maxVotes = optionsCount;
+        }
+      }
+    },
   });
   const mutation = useCreatePost();
 
@@ -78,7 +101,39 @@ export default function CreatePostPage() {
     mutation.mutate(values);
   });
 
+  useEffect(() => {
+    if (attachPoll) {
+      form.setFieldValue('poll', {
+        content: '',
+        isAnonymous: true,
+        maxVotes: 1,
+        options: [{ content: 'Option 1', image: null }],
+      });
+    } else {
+      form.setFieldValue('poll', null);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [attachPoll]);
+
   const selectedVisibility = visibilityMap[form.getValues().visibility as keyof typeof visibilityMap];
+
+  const addPollOption = () => {
+    const currentOptions = form.getValues().poll?.options || [];
+    form.setFieldValue('poll.options', [
+      ...currentOptions,
+      { content: `Option ${currentOptions.length + 1}`, image: null },
+    ]);
+  };
+
+  const removePollOption = (index: number) => {
+    const currentOptions = form.getValues().poll?.options || [];
+    if (currentOptions.length > 1) {
+      const newOptions = currentOptions.filter((_, i) => i !== index);
+      form.setFieldValue('poll.options', newOptions);
+    }
+  };
+
+  const pollOptions = form.getValues().poll?.options || [];
 
   return (
     <Container size='md' py='xl'>
@@ -246,6 +301,309 @@ export default function CreatePostPage() {
             </Stack>
           </Paper>
 
+          {/* Poll Toggle */}
+          <Paper
+            shadow='sm'
+            p='lg'
+            radius='lg'
+            style={{
+              background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.9) 100%)',
+              border: '1px solid var(--mantine-color-gray-2)',
+            }}
+          >
+            <Group justify='space-between' align='center'>
+              <Group gap='sm'>
+                <ThemeIcon
+                  size='md'
+                  variant='light'
+                  color={attachPoll ? 'green' : 'gray'}
+                  style={{
+                    transform: attachPoll ? 'scale(1.1)' : 'scale(1)',
+                    transition: 'transform 0.2s ease',
+                  }}
+                >
+                  <IconCheck size={16} />
+                </ThemeIcon>
+                <Box>
+                  <Text size='md' fw={600} c='gray.8'>
+                    Add a Poll
+                  </Text>
+                  <Text size='sm' c='dimmed'>
+                    Let your community vote on football-related questions
+                  </Text>
+                </Box>
+              </Group>
+
+              <Switch
+                size='lg'
+                color='green'
+                checked={attachPoll}
+                onChange={(event) => setAttachPoll(event.currentTarget.checked)}
+                styles={{
+                  track: {
+                    cursor: 'pointer',
+                  },
+                }}
+              />
+            </Group>
+          </Paper>
+
+          {/* Poll Section */}
+          <Collapse in={attachPoll}>
+            <Paper
+              shadow='sm'
+              p='lg'
+              radius='lg'
+              style={{
+                background: 'linear-gradient(135deg, rgba(34, 197, 94, 0.02) 0%, rgba(20, 184, 166, 0.02) 100%)',
+                border: '1px solid rgba(34, 197, 94, 0.1)',
+                position: 'relative',
+                overflow: 'hidden',
+              }}
+            >
+              {/* Decorative football pattern */}
+              <Box
+                style={{
+                  position: 'absolute',
+                  top: rem(-30),
+                  right: rem(-30),
+                  width: rem(60),
+                  height: rem(60),
+                  background: 'radial-gradient(circle, rgba(34, 197, 94, 0.1) 0%, transparent 70%)',
+                  borderRadius: '50%',
+                  pointerEvents: 'none',
+                }}
+              />
+
+              <Stack gap='xl'>
+                {/* Poll Header */}
+                <Group gap='sm' align='center'>
+                  <ThemeIcon size='md' radius='xl' variant='gradient' gradient={{ from: 'green.6', to: 'teal.6' }}>
+                    <IconBallFootball size={16} />
+                  </ThemeIcon>
+                  <Box>
+                    <Text size='lg' fw={600} c='gray.8'>
+                      Create Poll
+                    </Text>
+                    <Text size='sm' c='dimmed'>
+                      Ask your community to vote on football topics
+                    </Text>
+                  </Box>
+                </Group>
+
+                {/* Poll Content */}
+                <Stack gap='md'>
+                  <Text size='md' fw={500} c='gray.8'>
+                    Poll Question
+                  </Text>
+                  <Textarea
+                    placeholder='What do you think about the upcoming match? Who will win the championship? Share your poll question...'
+                    minRows={3}
+                    maxRows={6}
+                    autosize
+                    {...form.getInputProps('poll.content')}
+                    styles={{
+                      input: {
+                        fontSize: rem(16),
+                        lineHeight: 1.6,
+                        border: '1px solid var(--mantine-color-gray-3)',
+                        borderRadius: rem(8),
+                        '&:focus': {
+                          borderColor: 'var(--mantine-color-green-5)',
+                        },
+                      },
+                    }}
+                  />
+                </Stack>
+
+                {/* Poll Settings */}
+                <Stack gap='md'>
+                  <Text size='md' fw={500} c='gray.8'>
+                    Poll Settings
+                  </Text>
+
+                  <SimpleGrid cols={{ base: 1, sm: 2 }} spacing='md'>
+                    <Card
+                      shadow='sm'
+                      p='md'
+                      radius='lg'
+                      style={{
+                        background: 'var(--mantine-color-gray-0)',
+                        border: '1px solid var(--mantine-color-gray-2)',
+                      }}
+                    >
+                      <Stack gap='sm'>
+                        <Group gap='xs' align='center'>
+                          <ThemeIcon size='sm' variant='light' color='blue'>
+                            <IconCheck size={12} />
+                          </ThemeIcon>
+                          <Text size='sm' fw={500} c='gray.8'>
+                            Max Votes per User
+                          </Text>
+                        </Group>
+                        <NumberInput
+                          placeholder='1'
+                          min={1}
+                          max={10}
+                          {...form.getInputProps('poll.maxVotes')}
+                          styles={{
+                            input: {
+                              border: '1px solid var(--mantine-color-gray-3)',
+                              borderRadius: rem(8),
+                              '&:focus': {
+                                borderColor: 'var(--mantine-color-blue-5)',
+                              },
+                            },
+                          }}
+                        />
+                        <Text size='xs' c='dimmed'>
+                          How many options can each user vote for?
+                        </Text>
+                      </Stack>
+                    </Card>
+
+                    <Card
+                      shadow='sm'
+                      p='md'
+                      radius='lg'
+                      style={{
+                        background: 'var(--mantine-color-gray-0)',
+                        border: '1px solid var(--mantine-color-gray-2)',
+                      }}
+                    >
+                      <Stack gap='sm'>
+                        <Group gap='xs' align='center'>
+                          <ThemeIcon size='sm' variant='light' color='orange'>
+                            {form.getValues().poll?.isAnonymous ? <IconEyeOff size={12} /> : <IconEye size={12} />}
+                          </ThemeIcon>
+                          <Text size='sm' fw={500} c='gray.8'>
+                            Anonymous Voting
+                          </Text>
+                        </Group>
+                        <Switch
+                          {...form.getInputProps('poll.isAnonymous', { type: 'checkbox' })}
+                          color='orange'
+                          disabled
+                          styles={{
+                            track: {
+                              cursor: 'pointer',
+                            },
+                          }}
+                        />
+                        <Text size='xs' c='dimmed'>
+                          Hide voter identities in results (Currently not implemented)
+                        </Text>
+                      </Stack>
+                    </Card>
+                  </SimpleGrid>
+                </Stack>
+
+                {/* Poll Options */}
+                <Stack gap='md'>
+                  <Group justify='space-between' align='center'>
+                    <Text size='md' fw={500} c='gray.8'>
+                      Poll Options
+                    </Text>
+                    <Badge variant='light' color='green' size='sm'>
+                      {pollOptions.length} options
+                    </Badge>
+                  </Group>
+
+                  {pollOptions.length < 2 && (
+                    <Alert
+                      icon={<IconAlertCircle size={16} />}
+                      title='Minimum Options Required'
+                      color='orange'
+                      variant='light'
+                      radius='md'
+                    >
+                      You need at least 2 options for a valid poll. Add more options below.
+                    </Alert>
+                  )}
+
+                  <Stack gap='md'>
+                    {pollOptions.map((option, index) => (
+                      <Card
+                        key={index}
+                        shadow='sm'
+                        p='md'
+                        radius='lg'
+                        style={{
+                          background: 'white',
+                          border: '1px solid var(--mantine-color-gray-2)',
+                          position: 'relative',
+                        }}
+                      >
+                        <Group gap='md' align='center'>
+                          <ThemeIcon
+                            size='sm'
+                            variant='light'
+                            color='green'
+                            style={{
+                              flexShrink: 0,
+                            }}
+                          >
+                            <Text size='xs' fw={600}>
+                              {index + 1}
+                            </Text>
+                          </ThemeIcon>
+
+                          <TextInput
+                            placeholder={`Option ${index + 1}`}
+                            {...form.getInputProps(`poll.options.${index}.content`)}
+                            style={{ flex: 1 }}
+                            styles={{
+                              input: {
+                                border: '1px solid var(--mantine-color-gray-3)',
+                                borderRadius: rem(8),
+                                '&:focus': {
+                                  borderColor: 'var(--mantine-color-green-5)',
+                                },
+                              },
+                            }}
+                          />
+
+                          {pollOptions.length > 1 && (
+                            <ActionIcon
+                              variant='light'
+                              color='red'
+                              onClick={() => removePollOption(index)}
+                              style={{
+                                flexShrink: 0,
+                              }}
+                            >
+                              <IconTrash size={14} />
+                            </ActionIcon>
+                          )}
+                        </Group>
+                      </Card>
+                    ))}
+
+                    <Button
+                      variant='light'
+                      color='green'
+                      leftSection={<IconPlus size={16} />}
+                      onClick={addPollOption}
+                      disabled={pollOptions.length >= 10}
+                      style={{
+                        border: '2px dashed var(--mantine-color-green-3)',
+                        background: 'rgba(34, 197, 94, 0.05)',
+                      }}
+                    >
+                      Add Option
+                    </Button>
+
+                    {pollOptions.length >= 10 && (
+                      <Text size='xs' c='dimmed' ta='center'>
+                        Maximum 10 options allowed
+                      </Text>
+                    )}
+                  </Stack>
+                </Stack>
+              </Stack>
+            </Paper>
+          </Collapse>
+
           {/* Visibility Settings */}
           <Paper shadow='sm' p='lg' radius='lg'>
             <Stack gap='md'>
@@ -346,7 +704,7 @@ export default function CreatePostPage() {
               size='lg'
               radius='xl'
               loading={mutation.isPending}
-              disabled={!form.getValues().content.trim()}
+              disabled={!form.getValues().content.trim() || (attachPoll && pollOptions.length < 2)}
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
               style={{

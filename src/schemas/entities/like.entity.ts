@@ -11,8 +11,8 @@ export const likeSchema = z.object({
   id: z.string(),
   createdAt: z.string(),
   userId: z.string().uuid(),
-  postId: z.string().uuid().nullable(),
-  commentId: z.string().uuid().nullable(),
+  postId: z.string().uuid().nullish(),
+  commentId: z.string().uuid().nullish(),
   type: LikeType,
 });
 

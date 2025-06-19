@@ -1,5 +1,6 @@
 import type { MatchSchema } from '../../schemas/entities/match.entity';
 import type { PlayerSchema } from '../../schemas/entities/player.entity';
+import type { PollSchema } from '../../schemas/entities/poll.entity';
 import type { PostSchema } from '../../schemas/entities/post.entity';
 import type { TeamSchema } from '../../schemas/entities/team.entity';
 import type { UserSchema } from '../../schemas/entities/user.entity';
@@ -20,10 +21,20 @@ export type FeedPostResponse = PostSchema & {
   likes: { userId: string }[];
   author: Pick<UserSchema, 'id' | 'firstName' | 'lastName' | 'avatar' | 'username'>;
   attachements: unknown[];
+  poll?: Pick<PollSchema, 'id' | 'content'> & {
+    _count: {
+      options: number;
+    };
+  };
 };
 
 export type PostsResponse = Omit<FeedPostResponse, 'author'> & {
   author: Pick<UserSchema, 'id' | 'firstName' | 'lastName' | 'avatar' | 'username' | 'role'>;
+  poll?: Pick<PollSchema, 'id' | 'content'> & {
+    _count: {
+      options: number;
+    };
+  };
 };
 
 export type GetFeedResponse = FeedMatchResponse | FeedPostResponse;

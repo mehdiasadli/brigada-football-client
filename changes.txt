@@ -1,6 +1,8 @@
 === === === === === === === ===
-*Changes 18.06-05*
+*Changes 19.06-01*
 
+- _ADD_: Poll to the posts
+- _ADD_: You can select the max votes for the poll
 - _ADD_: Loading state to the dashboard venues summary card [ADMIN]
 - _ADD_: Activity points to the user card [ADMIN]
 === === === === === === === ===
