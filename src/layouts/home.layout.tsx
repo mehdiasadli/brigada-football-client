@@ -1,13 +1,15 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import { Header } from '../components/header';
 import { Box, rem } from '@mantine/core';
 import { useQueryClient } from '@tanstack/react-query';
 import { notifications } from '@mantine/notifications';
 import { usePullToRefresh } from '../hooks/use-pull-to-refresh';
 import PullToRefreshIndicator from '../components/PullToRefreshIndicator';
+import { useEffect } from 'react';
 
 export default function HomeLayout() {
   const queryClient = useQueryClient();
+  const { pathname } = useLocation();
 
   // Handle refresh logic
   const handleRefresh = async () => {
@@ -41,6 +43,11 @@ export default function HomeLayout() {
     resistance: 2.5,
     enabled: true,
   });
+
+  // everytime the pathname changes, go to the top of the page
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [pathname]);
 
   return (
     <Box

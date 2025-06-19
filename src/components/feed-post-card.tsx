@@ -16,6 +16,7 @@ interface FeedPostCard {
 }
 
 export default function FeedPostCard({ post, detail = false }: FeedPostCard) {
+  console.log(post);
   return (
     <FeedCardWrapper
       author={post.author}
@@ -27,12 +28,13 @@ export default function FeedPostCard({ post, detail = false }: FeedPostCard) {
         <Text component={detail ? undefined : Link} to={`/posts/c/${post.id}`}>
           {post.content}
         </Text>
-        {post.poll &&
-          (detail ? (
+        {post.poll ? (
+          detail ? (
             <PollCard poll={post.poll as GetOnePostResponse['poll']} />
           ) : (
             <SimplePollCard poll={post.poll} postId={post.id} />
-          ))}
+          )
+        ) : null}
         <PostFooter post={post} detail={detail} />
       </Stack>
     </FeedCardWrapper>

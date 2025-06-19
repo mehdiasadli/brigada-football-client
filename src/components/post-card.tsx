@@ -55,6 +55,11 @@ export default function PostCard({ post }: PostCardProps) {
             </Group>
 
             <Group gap='xs' mb='xs'>
+              {post.poll && (
+                <Badge variant='dot' color='green' size='xs'>
+                  Poll
+                </Badge>
+              )}
               <Text size='sm' c='dimmed' lineClamp={2}>
                 {post.content}
               </Text>
