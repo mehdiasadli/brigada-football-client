@@ -5,6 +5,7 @@ import { isMatch, isPost } from '../api/feed/feed.responses';
 import FeedPostCard from '../components/feed-post-card';
 import FeedMatchCard from '../components/feed-match-card';
 import CreatePostButton from '../components/create-post-button';
+import type { GetPostsOfUserResponse } from '../api/posts/posts.service';
 
 export default function HomePage() {
   const result = useFeed();
@@ -22,7 +23,7 @@ export default function HomePage() {
             }
 
             if (isPost(item)) {
-              return <FeedPostCard post={item} />;
+              return <FeedPostCard post={item as GetPostsOfUserResponse} />;
             }
 
             return null;

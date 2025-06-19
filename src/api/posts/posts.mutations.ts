@@ -1,11 +1,11 @@
 import { useQueryClient, type InfiniteData } from '@tanstack/react-query';
-import { postsService } from './posts.service';
+import { postsService, type GetPostsOfUserResponse } from './posts.service';
 import { useUserStore } from '../../stores/user.store';
 import { useMutate } from '../../hooks/use-mutate';
 import { feedKeys } from '../feed/feed.queries';
 import type { SuccessResponse } from '../define-api';
 import type { PaginatedResult } from '../../schemas/query.schema';
-import type { FeedPostResponse, GetFeedResponse } from '../feed/feed.responses';
+import type { GetFeedResponse } from '../feed/feed.responses';
 import { randId } from '../../utils/rand-id';
 import { postsKeys } from './posts.queries';
 
@@ -64,12 +64,10 @@ export function useCreatePost() {
                     },
                     poll: {
                       id: randId(),
-                      createdAt: new Date(),
-                      updatedAt: new Date(),
-                      postId: newPostId,
                       content: vars.poll?.content ?? '',
-                      maxVotes: vars.poll?.maxVotes ?? 0,
-                      isAnonymous: vars.poll?.isAnonymous ?? false,
+                      _count: {
+                        options: vars.poll?.options.length ?? 0,
+                      },
                     },
                   },
                 ],
@@ -83,7 +81,7 @@ export function useCreatePost() {
 
       queryClient.setQueriesData(
         { queryKey: postsKeys.ofUser(user.username) },
-        (old?: InfiniteData<SuccessResponse<PaginatedResult<FeedPostResponse>>>) => {
+        (old?: InfiniteData<SuccessResponse<PaginatedResult<GetPostsOfUserResponse>>>) => {
           if (!old) return old;
 
           const newData = { ...old, pages: [...old.pages] };
@@ -119,12 +117,10 @@ export function useCreatePost() {
                     },
                     poll: {
                       id: randId(),
-                      createdAt: new Date(),
-                      updatedAt: new Date(),
-                      postId: newPostId,
                       content: vars.poll?.content ?? '',
-                      maxVotes: vars.poll?.maxVotes ?? 0,
-                      isAnonymous: vars.poll?.isAnonymous ?? false,
+                      _count: {
+                        options: vars.poll?.options.length ?? 0,
+                      },
                     },
                   },
                 ],

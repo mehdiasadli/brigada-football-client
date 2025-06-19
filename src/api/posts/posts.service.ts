@@ -26,11 +26,17 @@ export const postsService = {
   getOne: (postId: string) => api.get<GetOnePostResponse>(`/${postId}`),
   delete: (postId: string) => api.delete(`/${postId}`),
   getPostsOfUser: (userId: string, paginationDto: PaginationSchema) =>
-    api.get<PaginatedResult<FeedPostResponse>>(`/user/${userId}`, {
+    api.get<PaginatedResult<GetPostsOfUserResponse>>(`/user/${userId}`, {
       params: {
         ...paginationDto,
       },
     }),
+};
+
+export type GetPostsOfUserResponse = FeedPostResponse & {
+  poll: Pick<PollSchema, 'id' | 'content'> & {
+    _count: { options: number };
+  };
 };
 
 export type GetOnePostResponse = FeedPostResponse & {

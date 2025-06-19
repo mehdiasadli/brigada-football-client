@@ -5,13 +5,13 @@ import FeedCardWrapper from './feed-card-wrapper';
 import { Link } from 'react-router-dom';
 import PostFooter from './post-footer';
 import PollCard from './poll-card';
-import type { GetOnePostResponse } from '../api/posts/posts.service';
+import type { GetOnePostResponse, GetPostsOfUserResponse } from '../api/posts/posts.service';
 import { IconChartBar, IconList } from '@tabler/icons-react';
 
 dayjs.extend(relativeTime);
 
 interface FeedPostCard {
-  post: GetOnePostResponse;
+  post: GetOnePostResponse | GetPostsOfUserResponse;
   detail?: boolean;
 }
 
@@ -27,7 +27,12 @@ export default function FeedPostCard({ post, detail = false }: FeedPostCard) {
         <Text component={detail ? undefined : Link} to={`/posts/c/${post.id}`}>
           {post.content}
         </Text>
-        {post.poll && (detail ? <PollCard poll={post.poll} /> : <SimplePollCard poll={post.poll} postId={post.id} />)}
+        {post.poll &&
+          (detail ? (
+            <PollCard poll={post.poll as GetOnePostResponse['poll']} />
+          ) : (
+            <SimplePollCard poll={post.poll} postId={post.id} />
+          ))}
         <PostFooter post={post} detail={detail} />
       </Stack>
     </FeedCardWrapper>
