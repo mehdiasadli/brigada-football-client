@@ -522,7 +522,7 @@ export default function CreatePostPage() {
                   )}
 
                   <Stack gap='md'>
-                    {pollOptions.map((option, index) => (
+                    {pollOptions.map((_, index) => (
                       <Card
                         key={index}
                         shadow='sm'
